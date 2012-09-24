@@ -30,4 +30,6 @@
 	<string name="hot_city">热门城市:</string>
 	<string name="download_province">按省份下载</string>
 	<string name="download">下载</string>
+	<string name="download_success">数据下载成功</string>
+	<string name="unzip">解压数据</string>
 </resources>

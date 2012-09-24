@@ -19,7 +19,7 @@ import com.amap.mapapi.map.MapActivity;
 import com.amap.mapapi.map.MapController;
 import com.amap.mapapi.map.MapView;
 import com.amap.mapapi.map.MyLocationOverlay;
-import com.carit.flashman.amap.BusLineSearchDemo;
+import com.carit.flashman.amap.BusLineSearch;
 import com.carit.flashman.util.Constants;
 import com.carit.flashman.util.MyLocationManager;
 import com.carit.flashman.util.MyLocationManager.LocationCallBack;
@@ -108,7 +108,7 @@ public class MainActivity extends MapActivity implements OnClickListener,Locatio
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.ImageButton_RouteAlert:
-                Intent intent = new Intent(this,BusLineSearchDemo.class);
+                Intent intent = new Intent(this,BusLineSearch.class);
                 startActivity(intent);
                 break;
         }

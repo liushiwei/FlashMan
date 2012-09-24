@@ -3,6 +3,7 @@ package com.carit.flashman.amap;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -38,9 +39,8 @@ import com.carit.flashman.R;
 import com.carit.flashman.util.Constants;
 import com.google.gson.Gson;
 
-public class BusLineSearchDemo extends MapActivity implements 
+public class BusLineSearch extends Activity implements 
 OnItemSelectedListener, OnClickListener, BusLineOverlay.BusLineMsgHandler {
-	private MapView mMapView = null;
 	private Button searchbynameBtn;
 	private Spinner selectCity;
 	private EditText searchName;
@@ -50,15 +50,12 @@ OnItemSelectedListener, OnClickListener, BusLineOverlay.BusLineMsgHandler {
 	private Button searchbystationBtn;
 	private ProgressDialog progDialog = null;
 	private BusPagedResult result = null;
-	private BusLineOverlay overlay = null;
 	private int curPage = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.bussearch);
-		mMapView = ((MapView) findViewById(R.id.buslinesearchmapview));
-		mMapView.setBuiltInZoomControls(true); // 设置启用内置的缩放控件
 		searchbynameBtn = (Button) this.findViewById(R.id.searchbyname);
 		searchbynameBtn.setOnClickListener(this);
 		selectCity = (Spinner) findViewById(R.id.cityName);
@@ -76,29 +73,18 @@ OnItemSelectedListener, OnClickListener, BusLineOverlay.BusLineMsgHandler {
 	
 	@Override
 	protected void onDestroy() {
-		if (overlay != null) {
-			overlay.removeFromMap(mMapView);
-		}
 		super.onDestroy();
 	}
 
 	private void drawBusLine(BusLineItem busLine) {
-		if (overlay != null) {
-			overlay.removeFromMap(mMapView);
-		}
-		overlay = new BusLineOverlay(this, busLine);
-		overlay.registerBusLineMessage(BusLineSearchDemo.this);
-		overlay.addToMap(mMapView);
 		ArrayList<GeoPoint> pts = new ArrayList<GeoPoint>();
 		pts.add(busLine.getLowerLeftPoint());
 		pts.add(busLine.getUpperRightPoint());
-		mMapView.getController().setFitView(pts);//调整地图显示范围
-		mMapView.invalidate();
 	}
 	
 	private void showResultList(List<BusLineItem> list) {
 		BusSearchDialog dialog = new BusSearchDialog(
-				BusLineSearchDemo.this, list);
+				BusLineSearch.this, list);
 		
 		dialog.setTitle("搜索结果:");
 		dialog.setOnListClickListener(new OnListItemClick() {
@@ -106,14 +92,14 @@ OnItemSelectedListener, OnClickListener, BusLineOverlay.BusLineMsgHandler {
 			public void onListItemClick(
 					BusSearchDialog dialog,
 					final BusLineItem busLineItem) {
-				progDialog = ProgressDialog.show(BusLineSearchDemo.this, null,
+				progDialog = ProgressDialog.show(BusLineSearch.this, null,
 							"正在搜索...", true, false);
 				Thread t = new Thread(new Runnable() {
 
 					@Override
 					public void run() {
 						String lineId = busLineItem.getmLineId();
-						BusSearch busSearch = new BusSearch(BusLineSearchDemo.this,
+						BusSearch busSearch = new BusSearch(BusLineSearch.this,
 								new BusQuery(lineId, BusQuery.SearchType.BY_ID, cityCode)); // 设置搜索字符串
 						try {
 							result = busSearch.searchBusLine();
@@ -137,7 +123,7 @@ OnItemSelectedListener, OnClickListener, BusLineOverlay.BusLineMsgHandler {
 	@Override
 	public void onClick(View v) {
 		final Button btn = (Button)v;
-		progDialog = ProgressDialog.show(BusLineSearchDemo.this, null,
+		progDialog = ProgressDialog.show(BusLineSearch.this, null,
 					"正在搜索...", true, false);
 		Thread t = new Thread(new Runnable() {
 
@@ -157,7 +143,7 @@ OnItemSelectedListener, OnClickListener, BusLineOverlay.BusLineMsgHandler {
 				}
 				try {
 					curPage = 1;
-					BusSearch busSearch = new BusSearch(BusLineSearchDemo.this,
+					BusSearch busSearch = new BusSearch(BusLineSearch.this,
 							new BusQuery(search, type, cityCode)); // 设置搜索字符串
 					busSearch.setPageSize(4);
 					String text = pageSizeText.getText().toString();
@@ -182,9 +168,6 @@ OnItemSelectedListener, OnClickListener, BusLineOverlay.BusLineMsgHandler {
 		public void handleMessage(Message msg) {
 			if (msg.what == Constants.BUSLINE_RESULT) {
 				progDialog.dismiss();
-				if (overlay != null) {
-					overlay.removeFromMap(mMapView);
-				}
 				List<BusLineItem> items;
 				try {
 					if (result == null || (items = result.getPage(curPage)) == null || items.size() == 0) {
@@ -310,7 +293,7 @@ OnItemSelectedListener, OnClickListener, BusLineOverlay.BusLineMsgHandler {
 					curPage++;
 				}
 
-				progDialog = ProgressDialog.show(BusLineSearchDemo.this, null,
+				progDialog = ProgressDialog.show(BusLineSearch.this, null,
 							"正在搜索...", true, false);
 				Thread t = new Thread(new Runnable() {
 
