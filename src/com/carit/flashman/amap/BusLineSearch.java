@@ -42,7 +42,6 @@ import com.google.gson.Gson;
 public class BusLineSearch extends Activity implements 
 OnItemSelectedListener, OnClickListener, BusLineOverlay.BusLineMsgHandler {
 	private Button searchbynameBtn;
-	private Spinner selectCity;
 	private EditText searchName;
 	private String[] itemCitys = { "北京-010", "上海-021", "西安-029","深圳-0755" };
 	private String cityCode;
@@ -58,13 +57,6 @@ OnItemSelectedListener, OnClickListener, BusLineOverlay.BusLineMsgHandler {
 		setContentView(R.layout.bussearch);
 		searchbynameBtn = (Button) this.findViewById(R.id.searchbyname);
 		searchbynameBtn.setOnClickListener(this);
-		selectCity = (Spinner) findViewById(R.id.cityName);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, itemCitys);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		selectCity.setAdapter(adapter);
-		selectCity.setPrompt("请选择城市：");
-		selectCity.setOnItemSelectedListener(this);
 		searchName = (EditText) findViewById(R.id.busName);
 		pageSizeText = (EditText)findViewById(R.id.pageSize);
 		searchbystationBtn = (Button)findViewById(R.id.searchbystation);
