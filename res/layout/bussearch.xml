@@ -16,49 +16,43 @@
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_weight="1" 
-            android:hint="线路或站名"/>
-        <RadioGroup android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:orientation="horizontal">
-            <RadioButton android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:text="线路"/>
-            <RadioButton android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:text="站点"/>
-        </RadioGroup>
-        <Button android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:background="@drawable/btn_map_nearsearch"/>
-    </LinearLayout>
-    
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal" >
-        
-        <EditText
-            android:id="@+id/pageSize"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="2" 
-            android:hint="page size"/>
-        
-        <Button
-            android:id="@+id/searchbyname"
+            android:layout_weight="1"
+            android:hint="线路或站名" />
+
+        <RadioGroup
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:text="线路名称查询" />
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/search_busline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="线路" />
+
+            <RadioButton
+                android:id="@+id/search_busstation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="站点" />
+        </RadioGroup>
 
         <Button
-            android:id="@+id/searchbystation"
+            android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:text="按站点查询" />
+            android:background="@drawable/btn_map_nearsearch" />
     </LinearLayout>
+    
+    <ExpandableListView android:id="@+id/busLineList"
+        android:layout_width="fill_parent" android:layout_height="fill_parent"
+        android:groupIndicator="@null" 
+        android:clickable="true" android:scrollbarAlwaysDrawHorizontalTrack="true">
+        
+    </ExpandableListView>
+
+
+   
 
 </LinearLayout>

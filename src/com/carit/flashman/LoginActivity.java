@@ -165,7 +165,7 @@ public class LoginActivity extends MapActivity implements OfflineMapDownloadList
                 }
             });
         }else{
-            mHandler.sendEmptyMessageDelayed(1, 3000);
+            mHandler.sendEmptyMessageDelayed(1, 2000);
         }
         /*
          * ToggleButton ctl = (ToggleButton) findViewById(R.id.download_ctl);
