@@ -53,10 +53,10 @@ public class FlashManProvider extends ContentProvider {
                 qb.setProjectionMap(LocationTable.tableProjectionMap);
                 break;
 
-//            case LOCATION_TABLE_ID:
-//                qb.setProjectionMap(sLocationTableProjectionMap);
-//                qb.appendWhere(LocationTable._ID + "=" + uri.getPathSegments().get(1));
-//                break;
+            case CityTable.TABLE_NO:
+                qb.setTables(CityTable.TABLE_NAME);
+                qb.setProjectionMap(CityTable.tableProjectionMap);
+                break;
             case PoiTable.TABLE_NO:
                 qb.setTables(PoiTable.TABLE_NAME);
                 qb.setProjectionMap(PoiTable.tableProjectionMap);
@@ -106,6 +106,8 @@ public class FlashManProvider extends ContentProvider {
                 return BusLineRelevanceTable.CONTENT_TYPE;
             case BusStationTable.TABLE_NO:
                 return BusStationTable.CONTENT_TYPE;
+            case CityTable.TABLE_NO:
+                return CityTable.CONTENT_TYPE;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -171,6 +173,15 @@ public class FlashManProvider extends ContentProvider {
                 }
 
                 break;
+            case CityTable.TABLE_NO:
+                rowId = db.insert(CityTable.TABLE_NAME, "_id", value);
+                if (rowId > 0) {
+                    Uri noteUri = ContentUris.withAppendedId(CityTable.CONTENT_URI, rowId);
+                    getContext().getContentResolver().notifyChange(noteUri, null);
+                    return noteUri;
+                }
+
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -188,12 +199,19 @@ public class FlashManProvider extends ContentProvider {
                 break;
             case PoiTable.TABLE_NO:
                 count = db.delete(PoiTable.TABLE_NAME, selection, selectionArgs);
+                break;
             case BusLineTable.TABLE_NO:
                 count = db.delete(BusLineTable.TABLE_NAME, selection, selectionArgs);
+                break;
             case BusLineRelevanceTable.TABLE_NO:
                 count = db.delete(BusLineRelevanceTable.TABLE_NAME, selection, selectionArgs);
+                break;
             case BusStationTable.TABLE_NO:
                 count = db.delete(BusStationTable.TABLE_NAME, selection, selectionArgs);
+                break;
+            case CityTable.TABLE_NO:
+                count = db.delete(CityTable.TABLE_NAME, selection, selectionArgs);
+                break;
 //            case LOCATION_TABLE_ID:
 //                String callLogId = uri.getPathSegments().get(1);
 //                count = db.delete(LocationTable.TABLE_NAME, LocationTable._ID + "=" + callLogId
@@ -229,6 +247,7 @@ public class FlashManProvider extends ContentProvider {
             db.execSQL(BusStationTable.CREATE_SQL);
             db.execSQL(BusLineRelevanceTable.CREATE_SQL);
             db.execSQL(PoiTable.CREATE_SQL);
+            db.execSQL(CityTable.CREATE_SQL);
         }
 
         @Override
@@ -247,6 +266,7 @@ public class FlashManProvider extends ContentProvider {
         sUriMatcher.addURI(AUTHORITY, BusLineTable.TABLE_NAME, BusLineTable.TABLE_NO);
         sUriMatcher.addURI(AUTHORITY, BusStationTable.TABLE_NAME, BusStationTable.TABLE_NO);
         sUriMatcher.addURI(AUTHORITY, BusLineRelevanceTable.TABLE_NAME, BusLineRelevanceTable.TABLE_NO);
+        sUriMatcher.addURI(AUTHORITY, CityTable.TABLE_NAME, CityTable.TABLE_NO);
         sUriMatcher.addURI(AUTHORITY, LocationTable.TABLE_NAME + "/#",
                 LOCATION_TABLE_ID);
 

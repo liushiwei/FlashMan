@@ -12,7 +12,7 @@ public class BusStationTable implements BaseColumns {
     public static final int TABLE_NO = FlashManProvider.TABLE_NO + 3;
 
 
-    public static final Uri CONTENT_URI = Uri.parse("content://" + FlashManProvider.AUTHORITY + "/busstation_table");
+    public static final Uri CONTENT_URI = Uri.parse("content://" + FlashManProvider.AUTHORITY + "/"+TABLE_NAME);
 
     public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.carit.busstation_table";
 

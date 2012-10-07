@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 public class LocationTable implements BaseColumns{
     public static final String TABLE_NAME =      "Location";
     public static final int TABLE_NO =      FlashManProvider.TABLE_NO+1;
-    public static final Uri CONTENT_URI = Uri.parse("content://" + FlashManProvider.AUTHORITY + "/location_table");
+    public static final Uri CONTENT_URI = Uri.parse("content://" + FlashManProvider.AUTHORITY + "/"+TABLE_NAME);
     public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.carit.location_table";
     public static final String DEFAULT_SORT_ORDER = "time ASC";
     public static final String TIME =      "time";      
@@ -20,7 +20,7 @@ public class LocationTable implements BaseColumns{
     public static final String BEARING =  "bearing";      
     public static final String ACCURACY  =  "accuracy";  
     
-    public static final String CREATE_SQL = "CREATE TABLE location_table ("
+    public static final String CREATE_SQL = "CREATE TABLE Location ("
             +_ID+" INTEGER primary key,"
             +"time INTEGER,"
             +"provider TEXT,"

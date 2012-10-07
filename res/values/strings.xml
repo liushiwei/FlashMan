@@ -32,4 +32,6 @@
 	<string name="download">下载</string>
 	<string name="download_success">数据下载成功</string>
 	<string name="unzip">解压数据</string>
+	<string name="getting_location">正在获取位置</string>
+	<string name="download_offline_map">离线地图</string>
 </resources>
