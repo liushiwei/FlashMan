@@ -29,6 +29,14 @@ public class FlashManService extends Service implements LocationCallBack {
     private ServiceCallBack mCallBack;
 
     private MyLocationManager mMyLocationManager;
+    
+    public static final int START_TRACK = 0;
+    
+    public static final int STOP_TRACK = 1;
+    
+    public static final int BOOT_COMPLETED = 2;
+    
+    private boolean isTrack;
 
     @Override
     public void onStart(Intent intent, int startId) {
@@ -44,6 +52,7 @@ public class FlashManService extends Service implements LocationCallBack {
             }
 
         }.start();
+        
         super.onStart(intent, startId);
     }
 
