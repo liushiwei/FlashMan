@@ -1,11 +1,8 @@
 
 package com.carit.flashman;
 
-import java.util.ArrayList;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,17 +13,16 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.mapapi.map.MapActivity;
-import com.amap.mapapi.offlinemap.City;
 import com.amap.mapapi.offlinemap.MOfflineMapStatus;
 import com.amap.mapapi.offlinemap.OfflineMapManager;
 import com.amap.mapapi.offlinemap.OfflineMapManager.OfflineMapDownloadListener;
+import com.carit.flashman.util.Common;
 
 public class LoginActivity extends MapActivity implements OfflineMapDownloadListener {
     private static final String TAG = "LoginActivity";
@@ -78,9 +74,9 @@ public class LoginActivity extends MapActivity implements OfflineMapDownloadList
                         progress.setProgress(msg.arg2);
                         if(mIsSuccess&&msg.arg2==0){
                             if (mDownload != null) {
-                                init(mDownload);
+                                Common.init(getBaseContext(),mDownload);
                             } else {
-                                init(mCity);
+                                Common.init(getBaseContext(),mCity);
                             }
                             startActivity(new Intent(getBaseContext(),MainActivity.class));
                             finish();
@@ -251,20 +247,5 @@ public class LoginActivity extends MapActivity implements OfflineMapDownloadList
         mHandler.obtainMessage(0, arg0, arg1).sendToTarget();
     }
 
-    private void init(String city) {
-        String cityCode=null;
-        ArrayList<City> citys = mOffline.getOfflineCityList();
-        for (City cityobj : citys) {
-            if(cityobj.getCity().contains(city))
-                cityCode = cityobj.getCode();
-        }
-        SharedPreferences info = getSharedPreferences("Info", 0);
-        Editor editor = info.edit();
-        editor.putBoolean("Init", true);
-        editor.putString("CityName", city);
-        editor.putString("CityCode", cityCode);
-        editor.commit();
-        Log.e(TAG, "city:"+city +",cityCode:" +cityCode);
-    }
-
+   
 }

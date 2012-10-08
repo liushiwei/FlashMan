@@ -27,6 +27,7 @@ public class CityTable implements BaseColumns{
             +"pinyin TEXT," 
             +"code TEXT" 
             +");";
+    public static final String INDEX_SQL = "CREATE UNIQUE INDEX [Code] ON [CityTable] ([code]);";
     
     public static HashMap<String, String> tableProjectionMap;
     

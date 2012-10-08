@@ -72,9 +72,9 @@ public class MyLocationManager {
 //		else
 //		    lastLocation = networkLocation;
 		
-		 MockProvider.getInstance().init(
-	                (LocationManager) mContext.getSystemService(
-	                        Context.LOCATION_SERVICE),locationListener);
+//		 MockProvider.getInstance().init(
+//	                (LocationManager) mContext.getSystemService(
+//	                        Context.LOCATION_SERVICE),locationListener);
 	}
 
     public static MyLocationManager getInstance() {

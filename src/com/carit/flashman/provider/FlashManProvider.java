@@ -1,7 +1,12 @@
 
 package com.carit.flashman.provider;
 
-import java.util.HashMap;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import com.carit.flashman.R;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -234,9 +239,10 @@ public class FlashManProvider extends ContentProvider {
     }
 
     private static class DatabaseHelper extends SQLiteOpenHelper {
-
+        private Context context;
         DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
+            this.context =context; 
         }
 
         @Override
@@ -248,6 +254,13 @@ public class FlashManProvider extends ContentProvider {
             db.execSQL(BusLineRelevanceTable.CREATE_SQL);
             db.execSQL(PoiTable.CREATE_SQL);
             db.execSQL(CityTable.CREATE_SQL);
+            db.execSQL(CityTable.INDEX_SQL);
+            try {
+                insertFromFile(db,context,R.raw.city_table);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -256,6 +269,36 @@ public class FlashManProvider extends ContentProvider {
                     + ", which will destroy all old data");
             db.execSQL("DROP TABLE IF EXISTS notes");
             onCreate(db);
+        }
+        /**
+         * This reads a file from the given Resource-Id and calls every line of it as a SQL-Statement
+         * 
+         * @param context
+         *  
+         * @param resourceId
+         *  e.g. R.raw.food_db
+         * 
+         * @return Number of SQL-Statements run
+         * @throws IOException
+         */
+        public int insertFromFile(SQLiteDatabase db,Context context, int resourceId) throws IOException {
+            // Reseting Counter
+            int result = 0;
+
+            // Open the resource
+            InputStream insertsStream = context.getResources().openRawResource(resourceId);
+            BufferedReader insertReader = new BufferedReader(new InputStreamReader(insertsStream));
+
+            // Iterate through lines (assuming each insert has its own line and theres no other stuff)
+            while (insertReader.ready()) {
+                String insertStmt = insertReader.readLine();
+                db.execSQL(insertStmt);
+                result++;
+            }
+            insertReader.close();
+
+            // returning number of inserted rows
+            return result;
         }
     }
 
