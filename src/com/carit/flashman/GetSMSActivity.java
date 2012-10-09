@@ -15,7 +15,10 @@ public class GetSMSActivity extends Activity {
         getPeople(getIntent().getStringExtra("number"));
         super.onCreate(savedInstanceState);
     }
-    public void getPeople(String number) {   
+    public void getPeople(String number) { 
+        if(number.length()>11){
+            number = number.substring(number.length()-11, number.length()-1);
+        }
         String[] projection = { ContactsContract.PhoneLookup.DISPLAY_NAME,   
                                 ContactsContract.CommonDataKinds.Phone.NUMBER};   
    
@@ -28,8 +31,9 @@ public class GetSMSActivity extends Activity {
                 null,          // WHERE clause value substitution   
                 null);   // Sort order.   
    
-        if( cursor == null ) {   
-            Log.d("GetSMSActivity", "getPeople null");   
+        if( cursor == null ||!cursor.moveToFirst()) {   
+            Log.d("GetSMSActivity", "getPeople null");  
+            ((TextView)findViewById(R.id.sms_label)).setText(number); 
             return;   
         }   
         Log.d("GetSMSActivity", "getPeople cursor.getCount() = " + cursor.getCount());   
@@ -42,7 +46,8 @@ public class GetSMSActivity extends Activity {
             String name = cursor.getString(nameFieldColumnIndex);   
             Log.i("Contacts", "" + name + " .... " + nameFieldColumnIndex); // 这里提示 force close   
             ((TextView)findViewById(R.id.sms_label)).setText(name);   
-        }   
+        } 
+        
     } 
     
 

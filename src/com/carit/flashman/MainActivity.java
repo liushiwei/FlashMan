@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -21,18 +22,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.amap.mapapi.core.GeoPoint;
 import com.amap.mapapi.map.MapActivity;
 import com.amap.mapapi.map.MapController;
 import com.amap.mapapi.map.MapView;
 import com.carit.flashman.FlashManService.ServiceCallBack;
-import com.carit.flashman.LoginActivity.SpinnerSelectedListener;
 import com.carit.flashman.amap.BusLineSearch;
 import com.carit.flashman.amap.MyLocationOverlayProxy;
 import com.carit.flashman.provider.CityTable;
@@ -140,6 +139,10 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
         // }
         //mOffline = new OfflineMapManager(MainActivity.this, null);
         //t.start();
+//        Boot_Receiver mSMSRec = new Boot_Receiver();
+//      IntentFilter filter = new IntentFilter();
+//      filter.addAction("android.provider.Telephony.SMS_RECEIVED");
+//      this.registerReceiver(mSMSRec, filter);
     }
 
     @Override
