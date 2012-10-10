@@ -41,13 +41,16 @@ public class Boot_Receiver extends BroadcastReceiver {
                     
                     abortBroadcast();
                     Intent it = new Intent();
-                    it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     it.setClass(context, GetSMSActivity.class);
                     it.putExtra("lat", tmp[0]);
                     it.putExtra("lng", tmp[1]);
                     it.putExtra("number", message[i].getOriginatingAddress());
                     it.putExtra("from", FlashManService.BOOT_COMPLETED);
                     context.startActivity(it);
+                    Log.e("SMS_Receiver", "startActivity");
                 }
             }
             Log.e("SMS_Receiver", sb.toString());

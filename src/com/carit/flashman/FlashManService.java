@@ -83,7 +83,8 @@ public class FlashManService extends Service implements LocationCallBack {
     }
 
     public class MyBinder extends Binder {
-        FlashManService getService() {
+        
+        public FlashManService getService() {
             return FlashManService.this;
         }
     }
@@ -134,6 +135,17 @@ public class FlashManService extends Service implements LocationCallBack {
     
     public void destoryLocationManager(LocationListener locationListener) {
     	mMyLocationManager.destoryLocationManager(locationListener);
+    }
+    
+    public void receiveSMS(Intent intent){
+        if(mCallBack!=null&&!((MainActivity)mCallBack).isFinishing()){
+            Log.e(TAG, "mCallBack not null");
+        }else{
+            intent.setClass(getBaseContext(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("from", MainActivity.INTENT_SMS);
+            startActivity(intent);
+        }
     }
 
 }

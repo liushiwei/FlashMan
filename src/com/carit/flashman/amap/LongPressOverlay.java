@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.amap.mapapi.map.ItemizedOverlay;
 import com.amap.mapapi.map.ItemizedOverlay.OnFocusChangeListener;
 import com.amap.mapapi.map.MapController;
 import com.amap.mapapi.map.MapView;
+import com.carit.flashman.MainActivity;
 import com.carit.flashman.R;
 
 @SuppressWarnings("rawtypes")
@@ -186,6 +188,12 @@ OnGestureListener, OnClickListener, OnFocusChangeListener{
                 mMapView.invalidate();
                 mPopView.setVisibility(View.GONE);
                 break;
+            case R.id.btn_pass:
+                Intent i = new Intent(Intent.ACTION_PICK);
+                i.setType("vnd.android.cursor.dir/phone");
+                ((MainActivity) mContext).startActivityForResult(i, 0);
+                break;
+            
         }
 
     }
