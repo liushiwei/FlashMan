@@ -2,6 +2,7 @@
 package com.carit.flashman;
 
 
+import com.amap.mapapi.core.GeoPoint;
 import com.carit.flashman.provider.LocationTable;
 import com.carit.flashman.util.MockProvider;
 import com.carit.flashman.util.MyLocationManager;
@@ -140,6 +141,10 @@ public class FlashManService extends Service implements LocationCallBack {
     public void receiveSMS(Intent intent){
         if(mCallBack!=null&&!((MainActivity)mCallBack).isFinishing()){
             Log.e(TAG, "mCallBack not null");
+            double lat = Double.valueOf(intent.getStringExtra("lat"));
+            double lng = Double.valueOf(intent.getStringExtra("lng"));
+            String title = intent.getStringExtra("name")!=null?intent.getStringExtra("name"):intent.getStringExtra("number");
+            ((MainActivity)mCallBack).addSMSItem(new GeoPoint(lat,lng, true),title );
         }else{
             intent.setClass(getBaseContext(), MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

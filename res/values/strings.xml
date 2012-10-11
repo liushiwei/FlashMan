@@ -36,5 +36,6 @@
 	<string name="download_offline_map">离线地图</string>
 	<string name="set_default_city">设置你的默认城市</string>
 	<string name="sure_send_position">确定发送你的位置给:%1$s吗?</string>
-	<string name="sms_from">^_^来自:&lt;u>%1$s&lt;/u>的位置信息,是否查看?</string>
+	<string name="sms_from">^_^ 来自:&lt;u>%1$s&lt;/u>的位置信息,是否查看?</string>
+	<string name="im_here">我在这里</string>
 </resources>

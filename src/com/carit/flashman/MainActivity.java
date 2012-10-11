@@ -4,10 +4,8 @@ package com.carit.flashman;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -22,7 +20,6 @@ import android.os.Message;
 import android.provider.Contacts.People.Phones;
 import android.telephony.gsm.SmsManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,8 +27,10 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amap.mapapi.core.GeoPoint;
 import com.amap.mapapi.map.MapActivity;
@@ -41,6 +40,7 @@ import com.carit.flashman.FlashManService.ServiceCallBack;
 import com.carit.flashman.amap.BusLineSearch;
 import com.carit.flashman.amap.LongPressOverlay;
 import com.carit.flashman.amap.MyLocationOverlayProxy;
+import com.carit.flashman.amap.SMSLocationOverlay;
 import com.carit.flashman.provider.CityTable;
 import com.carit.flashman.util.Common;
 
@@ -50,7 +50,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
 
     private MapController mMapController;
 
-    private GeoPoint point;
+    private GeoPoint mSMSPoint;
 
     private MyLocationOverlayProxy mLocationOverlay;
 
@@ -58,7 +58,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     // private MyLocationManager mMyLocationManager;
     private static final String TAG = "MainActivity";
 
-    private ProgressDialog mGetting_location_dialog;
+    private ProgressBar mGetting_location;
 
     private FlashManService mMyService;
     
@@ -92,6 +92,8 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     };
 
     private Drawable mPassPinDrawable;
+    
+    private SMSLocationOverlay mSMSLocationOverlay;
 
     /** Called when the activity is first created. */
     @Override
@@ -111,7 +113,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
         // 实现初次定位使定位结果居中显示
         mLocationOverlay.runOnFirstFix(new Runnable() {
             public void run() {
-                mGetting_location_dialog.dismiss();
+                
                 handler.sendMessage(Message.obtain(handler, FIRST_LOCATION));
                 mMapController.animateTo(mLocationOverlay.getMyLocation());
             }
@@ -122,20 +124,11 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
         findViewById(R.id.ImageButtonMyloc).setOnClickListener(this);
         findViewById(R.id.ImageButtonHotkey).setOnClickListener(this);
 
-        // show mGetting_location_dialog
-        mGetting_location_dialog = ProgressDialog.show(this, "",
-                getString(R.string.getting_location), true);
-        mGetting_location_dialog.setOnKeyListener(new OnKeyListener() {
-
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    dialog.dismiss();
-                    MainActivity.this.finish();
-                }
-                return false;
-            }
-        });
+        // show mGetting_location
+        mGetting_location = (ProgressBar) findViewById(R.id.progress_loc);
+        Toast.makeText(getBaseContext(), R.string.getting_location,
+                 Toast.LENGTH_SHORT).show();
+           
 
         // start FlashManService
         Intent i = new Intent();
@@ -178,11 +171,11 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case FIRST_LOCATION:
-                    mMapController.animateTo(mLocationOverlay.getMyLocation());
+                    mGetting_location.setVisibility(View.GONE);
                     break;
                 case LOCATION_CHANGE:
-                    if (mGetting_location_dialog.isShowing())
-                        mGetting_location_dialog.dismiss();
+                    if (mGetting_location.isShown())
+                        mGetting_location.setVisibility(View.GONE);
 
                     break;
                 case SEND_SMS:
@@ -195,7 +188,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
                             .setPositiveButton(android.R.string.ok,
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
-                                            sendSms(mToNumber,"#navi#|123123,123123|");
+                                            sendSms(mToNumber,"#navi#|"+mSMSPoint.getLatitudeE6()/1E6+","+mSMSPoint.getLongitudeE6()/1E6+"|");
                                         }
                                     })
                             .setNegativeButton(android.R.string.cancel,
@@ -450,6 +443,26 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
         } else {
             smsManager.sendTextMessage(destPhone, null, message, null, null);
         }
+    }
+    
+    public void addSMSItem(GeoPoint point , String title){
+        if(mSMSLocationOverlay==null){
+            mSMSLocationOverlay = new SMSLocationOverlay(mMapView, mMapController,
+                    mPassPinDrawable);
+            mSMSLocationOverlay.addSMSItem(point, title);
+            mMapView.getOverlays().add(mSMSLocationOverlay);
+            
+        }else{
+            mSMSLocationOverlay.addSMSItem(point, title);
+        }
+    }
+
+    public GeoPoint getSMSPoint() {
+        return mSMSPoint;
+    }
+
+    public void setSMSPoint(GeoPoint mSMSPoint) {
+        this.mSMSPoint = mSMSPoint;
     }
 
 }

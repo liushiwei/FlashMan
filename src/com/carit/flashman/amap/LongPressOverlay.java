@@ -189,6 +189,8 @@ OnGestureListener, OnClickListener, OnFocusChangeListener{
                 mPopView.setVisibility(View.GONE);
                 break;
             case R.id.btn_pass:
+                
+                ((MainActivity)mContext).setSMSPoint(mOverlays.get(mCurrentIndex).getPoint());
                 Intent i = new Intent(Intent.ACTION_PICK);
                 i.setType("vnd.android.cursor.dir/phone");
                 ((MainActivity) mContext).startActivityForResult(i, 0);
