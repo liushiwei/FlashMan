@@ -135,9 +135,9 @@ public class MyLocationManager {
     public void requestLocationUpdates(LocationListener locationListener){
     	mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
 				MINTIME, MININSTANCE, locationListener);
-		mLocationManager.requestLocationUpdates(
-				LocationManager.NETWORK_PROVIDER, MINTIME, MININSTANCE,
-				locationListener);
+//		mLocationManager.requestLocationUpdates(
+//				LocationManager.NETWORK_PROVIDER, MINTIME, MININSTANCE,
+//				locationListener);
     }
     
     public void destoryLocationManager(LocationListener locationListener) {
