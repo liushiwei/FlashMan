@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import com.carit.flashman.R;
-
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -21,6 +19,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.carit.flashman.R;
 
 public class FlashManProvider extends ContentProvider {
     private static final String TAG = "FlashManProvider";
@@ -61,6 +61,10 @@ public class FlashManProvider extends ContentProvider {
             case CityTable.TABLE_NO:
                 qb.setTables(CityTable.TABLE_NAME);
                 qb.setProjectionMap(CityTable.tableProjectionMap);
+                break;
+            case FavoritePointTable.TABLE_NO:
+                qb.setTables(FavoritePointTable.TABLE_NAME);
+                qb.setProjectionMap(FavoritePointTable.tableProjectionMap);
                 break;
             case PoiTable.TABLE_NO:
                 qb.setTables(PoiTable.TABLE_NAME);
@@ -113,6 +117,8 @@ public class FlashManProvider extends ContentProvider {
                 return BusStationTable.CONTENT_TYPE;
             case CityTable.TABLE_NO:
                 return CityTable.CONTENT_TYPE;
+            case FavoritePointTable.TABLE_NO:
+                return FavoritePointTable.CONTENT_TYPE;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -187,6 +193,15 @@ public class FlashManProvider extends ContentProvider {
                 }
 
                 break;
+            case FavoritePointTable.TABLE_NO:
+                rowId = db.insert(FavoritePointTable.TABLE_NAME, "_id", value);
+                if (rowId > 0) {
+                    Uri noteUri = ContentUris.withAppendedId(FavoritePointTable.CONTENT_URI, rowId);
+                    getContext().getContentResolver().notifyChange(noteUri, null);
+                    return noteUri;
+                }
+
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -216,6 +231,9 @@ public class FlashManProvider extends ContentProvider {
                 break;
             case CityTable.TABLE_NO:
                 count = db.delete(CityTable.TABLE_NAME, selection, selectionArgs);
+                break;
+            case FavoritePointTable.TABLE_NO:
+                count = db.delete(FavoritePointTable.TABLE_NAME, selection, selectionArgs);
                 break;
 //            case LOCATION_TABLE_ID:
 //                String callLogId = uri.getPathSegments().get(1);
@@ -253,6 +271,7 @@ public class FlashManProvider extends ContentProvider {
             db.execSQL(BusStationTable.CREATE_SQL);
             db.execSQL(BusLineRelevanceTable.CREATE_SQL);
             db.execSQL(PoiTable.CREATE_SQL);
+            db.execSQL(FavoritePointTable.CREATE_SQL);
             db.execSQL(CityTable.CREATE_SQL);
             db.execSQL(CityTable.INDEX_SQL);
             try {
@@ -310,6 +329,7 @@ public class FlashManProvider extends ContentProvider {
         sUriMatcher.addURI(AUTHORITY, BusStationTable.TABLE_NAME, BusStationTable.TABLE_NO);
         sUriMatcher.addURI(AUTHORITY, BusLineRelevanceTable.TABLE_NAME, BusLineRelevanceTable.TABLE_NO);
         sUriMatcher.addURI(AUTHORITY, CityTable.TABLE_NAME, CityTable.TABLE_NO);
+        sUriMatcher.addURI(AUTHORITY, FavoritePointTable.TABLE_NAME, FavoritePointTable.TABLE_NO);
         sUriMatcher.addURI(AUTHORITY, LocationTable.TABLE_NAME + "/#",
                 LOCATION_TABLE_ID);
 

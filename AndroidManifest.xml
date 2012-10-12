@@ -13,6 +13,7 @@
         android:theme="@style/AppTheme"
         android:name=".FlashManApplication" >
         <activity
+            android:configChanges="orientation|keyboardHidden"
             android:name=".MainActivity"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>

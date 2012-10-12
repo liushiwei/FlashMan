@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -464,5 +465,19 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     public void setSMSPoint(GeoPoint mSMSPoint) {
         this.mSMSPoint = mSMSPoint;
     }
+
+    @Override
+    public void onConfigurationChanged(Configuration arg0) {
+        // TODO Auto-generated method stub
+        super.onConfigurationChanged(arg0);
+        if (arg0.orientation==Configuration.ORIENTATION_LANDSCAPE) {
+            // Nothing need to be done here
+             
+         } else {
+            // Nothing need to be done here
+         }
+    }
+    
+   
 
 }
