@@ -110,6 +110,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
 
         // add MyLocationOverlay
         mLocationOverlay = new MyLocationOverlayProxy(this, mMapView);
+        mLocationOverlay.enableCompass();
         mMapView.getOverlays().add(mLocationOverlay);
         // 实现初次定位使定位结果居中显示
         mLocationOverlay.runOnFirstFix(new Runnable() {
@@ -468,7 +469,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
 
     @Override
     public void onConfigurationChanged(Configuration arg0) {
-        // TODO Auto-generated method stub
+        Log.e(TAG, "onConfigurationChanged");
         super.onConfigurationChanged(arg0);
         if (arg0.orientation==Configuration.ORIENTATION_LANDSCAPE) {
             // Nothing need to be done here

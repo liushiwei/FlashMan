@@ -26,7 +26,7 @@ public class FavoritePointTable implements BaseColumns {
     
     public static final String TIME = "Time";
     
-    public static final String CREATE_SQL = "CREATE TABLE [Poi] ( "
+    public static final String CREATE_SQL = "CREATE TABLE [FavoritePoint] ( "
                                 +_ID+" INTEGER primary key AUTOINCREMENT,"
                                 +"[Title] TEXT," 
                                 +"[Describe] TEXT, "

@@ -1,6 +1,7 @@
 package com.carit.flashman.amap;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.location.Location;
@@ -62,6 +63,15 @@ public class MyLocationOverlayProxy extends com.amap.mapapi.map.MyLocationOverla
         }
         }
         return super.onTap(arg0, arg1);
+    }
+
+
+
+
+    @Override
+    protected void drawCompass(Canvas arg0, float arg1) {
+        Log.e("MyLocationOverlayProxy", "arg1 = " +arg1);
+        super.drawCompass(arg0, arg1);
     }
     
     
