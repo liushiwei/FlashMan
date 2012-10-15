@@ -11,30 +11,30 @@
     android:orientation="horizontal" >
 
     <ImageButton
-        android:id="@+id/btn_delete"
+        android:id="@+id/btn_poi"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:background="@android:color/transparent"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/pop_btn_delete" />
+        android:src="@drawable/pop_btn_nearsearch" />
 
     <ImageButton
-        android:id="@+id/btn_pass"
+        android:id="@+id/btn_share"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:background="@android:color/transparent"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/pop_btn_pass" />
+        android:src="@drawable/pop_btn_share" />
 
     <ImageButton
-        android:id="@+id/btn_end"
+        android:id="@+id/btn_fav"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:background="@android:color/transparent"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/pop_btn_end" />
+        android:src="@drawable/pop_btn_fav" />
 
 </LinearLayout>
