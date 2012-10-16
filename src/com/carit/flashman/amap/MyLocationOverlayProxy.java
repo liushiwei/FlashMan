@@ -1,6 +1,8 @@
 package com.carit.flashman.amap;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import com.amap.mapapi.core.GeoPoint;
 import com.amap.mapapi.map.MapView;
+import com.carit.flashman.MainActivity;
 import com.carit.flashman.R;
 import com.carit.flashman.util.Common;
 
@@ -112,7 +115,29 @@ public class MyLocationOverlayProxy extends com.amap.mapapi.map.MyLocationOverla
 
     @Override
     public void onClick(View v) {
-        // TODO Auto-generated method stub
+        if(v.getId()==R.id.btn_share){
+            
+        }else if(v.getId()==R.id.btn_fav){
+            View view = View.inflate(mContext, R.layout.fav_dialog, null);
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
+            .setTitle(R.string.fav_point).setView(view)
+            .setIcon(R.drawable.fav)
+            .setPositiveButton(android.R.string.ok,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            //sendSms(mToNumber,"#navi#|"+mSMSPoint.getLatitudeE6()/1E6+","+mSMSPoint.getLongitudeE6()/1E6+"|");
+                        }
+                    })
+            .setNegativeButton(android.R.string.cancel,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            dialog.dismiss();
+                        }
+                    });
+          builder.show();
+        }else{
+            
+        }
         
     }
     
