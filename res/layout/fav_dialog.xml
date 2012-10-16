@@ -17,7 +17,7 @@
             android:textColor="#fff" />
 
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/fav_title"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
              >
@@ -40,7 +40,7 @@
             android:textColor="#fff"/>
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/fav_describe"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:ems="10"

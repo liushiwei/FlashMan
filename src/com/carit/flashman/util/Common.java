@@ -10,7 +10,9 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.carit.flashman.FlashManApplication;
+import com.carit.flashman.dao.FavoritePoint;
 import com.carit.flashman.provider.CityTable;
+import com.carit.flashman.provider.FavoritePointTable;
 import com.carit.flashman.provider.LocationTable;
 import com.map.projection.Projection;
 
@@ -43,6 +45,18 @@ public final class Common {
         values.put(LocationTable.LNG, location.getLongitude());
         Uri uri = FlashManApplication.getContext().getContentResolver()
                 .insert(LocationTable.CONTENT_URI, values);
+    }
+    
+    public static void saveFavoritePoint(FavoritePoint point) {
+        ContentValues values = new ContentValues();
+        values.put(FavoritePointTable.TIME, point.getTime());
+        values.put(FavoritePointTable.LAT, point.getLat());
+        values.put(FavoritePointTable.LNG, point.getLng());
+        values.put(FavoritePointTable.SOURCE, point.getSource());
+        values.put(FavoritePointTable.TITLE, point.getTitle());
+        values.put(FavoritePointTable.DESCRIBE, point.getDescribe());
+        Uri uri = FlashManApplication.getContext().getContentResolver()
+                .insert(FavoritePointTable.CONTENT_URI, values);
     }
     
     

@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -29,6 +30,8 @@ public class MyLocationOverlayProxy extends com.amap.mapapi.map.MyLocationOverla
 	 private Context mContext;
 	 private MapView mMapView;
     private View mPopView;
+    private EditText mFav_title;
+    private EditText mFav_describe;
 	 public MyLocationOverlayProxy(Context context, MapView mapView) {
 		super(context, mapView);
 		mMapView = mapView;
@@ -119,6 +122,10 @@ public class MyLocationOverlayProxy extends com.amap.mapapi.map.MyLocationOverla
             
         }else if(v.getId()==R.id.btn_fav){
             View view = View.inflate(mContext, R.layout.fav_dialog, null);
+            mFav_title = (EditText) view.findViewById(R.id.fav_title);
+            mFav_title.setText("my Location");
+            mFav_title.setSelectAllOnFocus(true);
+            mFav_describe = (EditText) view.findViewById(R.id.fav_describe);
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
             .setTitle(R.string.fav_point).setView(view)
             .setIcon(R.drawable.fav)
@@ -126,6 +133,7 @@ public class MyLocationOverlayProxy extends com.amap.mapapi.map.MyLocationOverla
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             //sendSms(mToNumber,"#navi#|"+mSMSPoint.getLatitudeE6()/1E6+","+mSMSPoint.getLongitudeE6()/1E6+"|");
+                            
                         }
                     })
             .setNegativeButton(android.R.string.cancel,
