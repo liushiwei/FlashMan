@@ -13,6 +13,8 @@ public class FavoritePointTable implements BaseColumns {
     public static final Uri CONTENT_URI = Uri.parse("content://" + FlashManProvider.AUTHORITY + "/"+TABLE_NAME);
 
     public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.carit.favorite_point_table";
+    
+    public static final String DEFAULT_SORT_ORDER = "Time ASC";
 
     public static final String TITLE = "Title";
     
