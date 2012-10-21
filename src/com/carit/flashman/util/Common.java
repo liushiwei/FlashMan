@@ -47,7 +47,7 @@ public final class Common {
                 .insert(LocationTable.CONTENT_URI, values);
     }
     
-    public static void saveFavoritePoint(FavoritePoint point) {
+    public static Uri saveFavoritePoint(FavoritePoint point) {
         ContentValues values = new ContentValues();
         values.put(FavoritePointTable.TIME, point.getTime());
         values.put(FavoritePointTable.LAT, point.getLat());
@@ -55,8 +55,12 @@ public final class Common {
         values.put(FavoritePointTable.SOURCE, point.getSource());
         values.put(FavoritePointTable.TITLE, point.getTitle());
         values.put(FavoritePointTable.DESCRIBE, point.getDescribe());
-        Uri uri = FlashManApplication.getContext().getContentResolver()
+        return FlashManApplication.getContext().getContentResolver()
                 .insert(FavoritePointTable.CONTENT_URI, values);
+    }
+    
+    public static int deleteFavoritePoint(long id) {
+        return FlashManApplication.getContext().getContentResolver().delete(FavoritePointTable.CONTENT_URI, "_id = "+id, null);
     }
     
     

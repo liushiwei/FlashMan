@@ -1,9 +1,12 @@
 package com.carit.flashman.amap;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -14,7 +17,9 @@ import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.amap.mapapi.core.GeoPoint;
 import com.amap.mapapi.core.OverlayItem;
@@ -24,6 +29,8 @@ import com.amap.mapapi.map.MapController;
 import com.amap.mapapi.map.MapView;
 import com.carit.flashman.MainActivity;
 import com.carit.flashman.R;
+import com.carit.flashman.dao.FavoritePoint;
+import com.carit.flashman.util.Common;
 
 @SuppressWarnings("rawtypes")
 public class LongPressOverlay extends ItemizedOverlay implements OnDoubleTapListener,
@@ -49,6 +56,10 @@ OnGestureListener, OnClickListener, OnFocusChangeListener{
 
     private int mCurrentIndex;
 
+    private EditText mFav_title;
+
+    private EditText mFav_describe;
+
     public LongPressOverlay(Context context, MapView mapView, MapController mapCtrl,
             Drawable drawable) {
         super(boundCenterBottom(drawable));
@@ -67,6 +78,8 @@ OnGestureListener, OnClickListener, OnFocusChangeListener{
         end = (ImageButton) mPopView.findViewById(R.id.btn_pass);
         end.setOnClickListener(this);
         end = (ImageButton) mPopView.findViewById(R.id.btn_delete);
+        end.setOnClickListener(this);
+        end = (ImageButton) mPopView.findViewById(R.id.btn_fav);
         end.setOnClickListener(this);
         populate(); // Add this
     }
@@ -195,6 +208,40 @@ OnGestureListener, OnClickListener, OnFocusChangeListener{
                 i.setType("vnd.android.cursor.dir/phone");
                 ((MainActivity) mContext).startActivityForResult(i, 0);
                 break;
+            case R.id.btn_fav:
+                View view = View.inflate(mContext, R.layout.fav_dialog, null);
+                mFav_title = (EditText) view.findViewById(R.id.fav_title);
+                mFav_title.setText("my Location");
+                
+                mFav_title.setSelectAllOnFocus(true);
+                mFav_title.requestFocus();
+                mFav_describe = (EditText) view.findViewById(R.id.fav_describe);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
+                .setTitle(R.string.fav_point).setView(view)
+                .setIcon(R.drawable.fav)
+                .setPositiveButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                //sendSms(mToNumber,"#navi#|"+mSMSPoint.getLatitudeE6()/1E6+","+mSMSPoint.getLongitudeE6()/1E6+"|");
+                                FavoritePoint point = new FavoritePoint();
+                                point.setTitle(mFav_title.getText().toString());
+                                point.setDescribe(mFav_describe.getText().toString());
+                                point.setLat(mOverlays.get(mCurrentIndex).getPoint().getLatitudeE6()/1E6+"");
+                                point.setLng(mOverlays.get(mCurrentIndex).getPoint().getLongitudeE6()/1E6+"");
+                                point.setTime(new Date().getTime());
+                                point.setSource(FavoritePoint.LONGPRESS);
+                                Common.saveFavoritePoint(point);
+                                Toast.makeText(mContext,"Location Saved", Toast.LENGTH_SHORT).show();          
+                            }
+                        })
+                .setNegativeButton(android.R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                dialog.dismiss();
+                            }
+                        });
+              builder.show();
+              break;
             
         }
 

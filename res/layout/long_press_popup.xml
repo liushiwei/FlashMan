@@ -35,6 +35,16 @@
         android:background="@android:color/transparent"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/pop_btn_end" />
+        android:src="@drawable/pop_btn_end" 
+        android:visibility="gone"/>
+    <ImageButton
+        android:id="@+id/btn_fav"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/pop_btn_fav" 
+        />
 
 </LinearLayout>

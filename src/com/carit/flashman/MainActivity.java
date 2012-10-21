@@ -39,6 +39,7 @@ import com.amap.mapapi.map.MapController;
 import com.amap.mapapi.map.MapView;
 import com.carit.flashman.FlashManService.ServiceCallBack;
 import com.carit.flashman.amap.BusLineSearch;
+import com.carit.flashman.amap.FavoritePointsActivity;
 import com.carit.flashman.amap.LongPressOverlay;
 import com.carit.flashman.amap.MyLocationOverlayProxy;
 import com.carit.flashman.amap.SMSLocationOverlay;
@@ -125,6 +126,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
         findViewById(R.id.ImageButton_RouteAlert).setOnClickListener(this);
         findViewById(R.id.ImageButtonMyloc).setOnClickListener(this);
         findViewById(R.id.ImageButtonHotkey).setOnClickListener(this);
+        findViewById(R.id.ImageButton_Fav).setOnClickListener(this);
 
         // show mGetting_location
         mGetting_location = (ProgressBar) findViewById(R.id.progress_loc);
@@ -254,6 +256,10 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
                 break;
             case R.id.ImageButtonHotkey:
 
+                break;
+            case R.id.ImageButton_Fav:
+                Intent fav = new Intent(this, FavoritePointsActivity.class);
+                startActivity(fav);
                 break;
         }
 

@@ -35,6 +35,7 @@ public class FavoritePointTable implements BaseColumns {
                                 +"[Lat] TEXT, "
                                 +"[Lng] TEXT, "
                                 +"[Source] INT, "
+                                +"[Type] INT, "
                                 +"[Time] INTEGER);";
                                         
     public static HashMap<String, String> tableProjectionMap;

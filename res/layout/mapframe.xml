@@ -194,15 +194,24 @@
             android:background="@drawable/btn_its_selector"
             android:checked="false"
             android:textOff=""
-            android:textOn="" />
+            android:textOn="" 
+            android:visibility="gone"/>
     </LinearLayout>
-
+    <ImageButton
+        android:id="@+id/ImageButton_Fav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/ToggleButton_ITSlayout"
+        android:background="@android:color/transparent"
+        android:paddingRight="4.0dip"
+        android:src="@drawable/pop_btn_fav" />
     <ImageButton
         android:id="@id/ImageButton_RouteAlert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/ToggleButton_ITSlayout"
+        android:layout_below="@id/ImageButton_Fav"
         android:background="@android:color/transparent"
         android:paddingRight="4.0dip"
         android:src="@drawable/btn_map_busline" />

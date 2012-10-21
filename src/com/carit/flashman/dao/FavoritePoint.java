@@ -64,6 +64,14 @@ public class FavoritePoint {
         Time = time;
     }
 
+    public long getId() {
+        return Id;
+    }
+
+    public void setId(long id) {
+        Id = id;
+    }
+
     private String Title;
     
     private String Describe;
@@ -75,5 +83,7 @@ public class FavoritePoint {
     private int Source;
     
     private long Time;
+    
+    private long Id;
 
 }

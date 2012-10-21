@@ -1,5 +1,7 @@
 package com.carit.flashman.amap;
 
+import java.util.Date;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,6 +21,7 @@ import com.amap.mapapi.core.GeoPoint;
 import com.amap.mapapi.map.MapView;
 import com.carit.flashman.MainActivity;
 import com.carit.flashman.R;
+import com.carit.flashman.dao.FavoritePoint;
 import com.carit.flashman.util.Common;
 
 /**
@@ -64,12 +67,12 @@ public class MyLocationOverlayProxy extends com.amap.mapapi.map.MyLocationOverla
             location.setLatitude(latlng[0]);
             location.setLongitude(latlng[1]);
             Common.saveLocation(location);
+            super.onLocationChanged(location);
         }else if("lbs".equals(location.getProvider())){
             Common.saveLocation(location);
-        }else
-            return;
+            super.onLocationChanged(location);
+        }
 	    }
-		super.onLocationChanged(location);
 	}
 
 
@@ -124,7 +127,9 @@ public class MyLocationOverlayProxy extends com.amap.mapapi.map.MyLocationOverla
             View view = View.inflate(mContext, R.layout.fav_dialog, null);
             mFav_title = (EditText) view.findViewById(R.id.fav_title);
             mFav_title.setText("my Location");
+            
             mFav_title.setSelectAllOnFocus(true);
+            mFav_title.requestFocus();
             mFav_describe = (EditText) view.findViewById(R.id.fav_describe);
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
             .setTitle(R.string.fav_point).setView(view)
@@ -133,7 +138,15 @@ public class MyLocationOverlayProxy extends com.amap.mapapi.map.MyLocationOverla
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             //sendSms(mToNumber,"#navi#|"+mSMSPoint.getLatitudeE6()/1E6+","+mSMSPoint.getLongitudeE6()/1E6+"|");
-                            
+                            FavoritePoint point = new FavoritePoint();
+                            point.setTitle(mFav_title.getText().toString());
+                            point.setDescribe(mFav_describe.getText().toString());
+                            point.setLat(getMyLocation().getLatitudeE6()/1E6+"");
+                            point.setLng(getMyLocation().getLongitudeE6()/1E6+"");
+                            point.setTime(new Date().getTime());
+                            point.setSource(FavoritePoint.LONGPRESS);
+                            Common.saveFavoritePoint(point);
+                            Toast.makeText(mContext,"Location Saved", Toast.LENGTH_SHORT).show();          
                         }
                     })
             .setNegativeButton(android.R.string.cancel,

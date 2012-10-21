@@ -14,12 +14,15 @@
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical" >
+        android:orientation="vertical" 
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="SDFSDF"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
@@ -30,7 +33,7 @@
 
     </LinearLayout>
     <Button
-            android:id="@+id/button1"
+            android:id="@+id/delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/fav_point_delete" />
