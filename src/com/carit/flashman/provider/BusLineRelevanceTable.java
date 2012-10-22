@@ -12,10 +12,12 @@ public class BusLineRelevanceTable implements BaseColumns{
     public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.carit.buslinerelevance_table";
     public static final String BUSLINEID =      "BusLineId";      
     public static final String BUSSTATIONID =   "BusStationId";
+    public static final String BUSSTATIONORDER = "BusStationOrder";
     public static final String CREATE_SQL = "CREATE TABLE BusLineRelevance ("
             +_ID+" INTEGER primary key,"
             +"[BusLineId] TEXT NOT NULL, "
-            +"[BusStationId] INT NOT NULL);";
+            +"[BusStationId] INT NOT NULL," +
+            "[BusStationOrder] INT NOT NULL);";
     /*CREATE TABLE [BusLineRelevance] (
     [_id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     
@@ -33,5 +35,6 @@ public static HashMap<String, String> tableProjectionMap;
         tableProjectionMap.put(_ID,_ID);
         tableProjectionMap.put(BUSLINEID,BUSLINEID);
         tableProjectionMap.put(BUSSTATIONID,BUSSTATIONID);
+        tableProjectionMap.put(BUSSTATIONORDER,BUSSTATIONORDER);
     }
 }

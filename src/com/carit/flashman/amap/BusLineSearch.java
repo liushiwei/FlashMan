@@ -99,10 +99,10 @@ public class BusLineSearch extends Activity implements OnItemSelectedListener, O
         ((RadioButton) findViewById(R.id.search_busline)).setOnCheckedChangeListener(this);
         ((RadioButton) findViewById(R.id.search_busstation)).setOnCheckedChangeListener(this);
         SharedPreferences info = getSharedPreferences("Info", 0);
-        cityCode = info.getString("CityCode", "010");
-//        ExpandableListView busLineList = (ExpandableListView)findViewById(R.id.busLineList);
-//        Cursor cursor = getContentResolver().query(BusLineTable.CONTENT_URI, null, null, null, null);
-//        busLineList.setAdapter(new BusLineListAdapter(cursor,getBaseContext()));
+        cityCode = info.getString("CityCode", "0755");
+        ExpandableListView busLineList = (ExpandableListView)findViewById(R.id.busLineList);
+        Cursor cursor = getContentResolver().query(BusLineTable.CONTENT_URI, null, null, null, null);
+        busLineList.setAdapter(new BusLineListAdapter(cursor,getBaseContext()));
     }
 
     @Override

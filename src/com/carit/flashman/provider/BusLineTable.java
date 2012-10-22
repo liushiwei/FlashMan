@@ -68,6 +68,8 @@ public class BusLineTable implements BaseColumns {
 
     public static final String ISLOOP = "IsLoop";
     
+    public static final String COORDINATES = "Coordinates";
+    
     public static final String CREATE_SQL= "CREATE TABLE [BusLine] ("
                                               +_ID+" INTEGER primary key,"
                                               +"[Air] BOOLEAN," 
@@ -94,7 +96,8 @@ public class BusLineTable implements BaseColumns {
                                               +"[IsDoubleDeck] BOOLEAN, "
                                               +"[IsExpressWay] BOOLEAN, "
                                               +"[IsIcCard] BOOLEAN, "
-                                              +"[IsLoop] BOOLEAN);";
+                                              +"[IsLoop] BOOLEAN," 
+                                              +"[Coordinates] TEXT);";
     
     public static HashMap<String, String> tableProjectionMap;
     
@@ -127,6 +130,7 @@ public class BusLineTable implements BaseColumns {
         tableProjectionMap.put(ISEXPRESSWAY ,ISEXPRESSWAY);              
         tableProjectionMap.put(ISICCARD ,ISICCARD);                     
         tableProjectionMap.put(ISLOOP ,ISLOOP);  
+        tableProjectionMap.put(COORDINATES ,COORDINATES);
     }
 
 }
