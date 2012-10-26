@@ -478,7 +478,8 @@ public class FlashManProvider extends ContentProvider {
         public synchronized SQLiteDatabase getReadableDatabase() {
             try{
                 String myPath = DB_PATH + DB_NAME;
-                return SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+                myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+                return myDataBase;
      
             }catch(SQLiteException e){
      
@@ -491,8 +492,8 @@ public class FlashManProvider extends ContentProvider {
         public synchronized SQLiteDatabase getWritableDatabase() {
             try{
                 String myPath = DB_PATH + DB_NAME;
-                return SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
-     
+                myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
+                return myDataBase;
             }catch(SQLiteException e){
      
                 return null;

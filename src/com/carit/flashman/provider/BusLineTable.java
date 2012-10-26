@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 public class BusLineTable implements BaseColumns {
-    public static final String TABLE_NAME = "BusLine";
+    public static final String TABLE_NAME = "BusLineTable";
 
     public static final int TABLE_NO = FlashManProvider.TABLE_NO + 2;
 
@@ -48,7 +48,7 @@ public class BusLineTable implements BaseColumns {
 
     public static final String STARTTIME = "StartTime";
 
-    public static final String STATIONS = "Stations";
+    //public static final String STATIONS = "Stations";
 
     public static final String STATUS = "Status";
 
@@ -120,7 +120,7 @@ public class BusLineTable implements BaseColumns {
         tableProjectionMap.put(NAME ,NAME);                              
         tableProjectionMap.put(SPEED ,SPEED);                            
         tableProjectionMap.put(STARTTIME ,STARTTIME);                    
-        tableProjectionMap.put(STATIONS ,STATIONS);                      
+        //tableProjectionMap.put(STATIONS ,STATIONS);                      
         tableProjectionMap.put(STATUS ,STATUS);                          
         tableProjectionMap.put(TERMINALNAME ,TERMINALNAME);              
         tableProjectionMap.put(TERMINALSPELL ,TERMINALSPELL);            

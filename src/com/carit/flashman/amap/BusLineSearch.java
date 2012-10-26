@@ -41,7 +41,9 @@ import com.amap.mapapi.core.AMapException;
 import com.amap.mapapi.core.GeoPoint;
 import com.amap.mapapi.map.MapView;
 import com.carit.flashman.R;
+import com.carit.flashman.provider.BusLineRelevanceTable;
 import com.carit.flashman.provider.BusLineTable;
+import com.carit.flashman.provider.BusStationTable;
 import com.google.gson.Gson;
 
 public class BusLineSearch extends Activity implements OnItemSelectedListener, OnClickListener,
@@ -76,6 +78,10 @@ public class BusLineSearch extends Activity implements OnItemSelectedListener, O
     public static final int KEY_NULL = 6003;
 
     public static final int SEARCHING = 6004;
+    
+    public static final int UPDATE_ADAPTER = 6005;
+    
+    private ExpandableListView mBusLineList;
 
     private Handler mHandler = new Handler() {
 
@@ -85,6 +91,22 @@ public class BusLineSearch extends Activity implements OnItemSelectedListener, O
                 case KEY_NULL:
                     Toast.makeText(getBaseContext(), "输入不能为空", Toast.LENGTH_LONG).show();
                     break;
+                case UPDATE_ADAPTER:
+                    if(mIsSearchBusLine){
+                    Cursor cursor = getContentResolver().query(BusLineTable.CONTENT_URI, new String[] {
+                            BusLineTable._ID,
+                            BusLineTable.LINEID,
+                            BusLineTable.NAME
+                    }, BusLineTable.NAME+" Like "+"'"+msg.obj+"%'", null, null);
+                    mBusLineList.setAdapter(new BusLineListAdapter(cursor,BusLineSearch.this,mIsSearchBusLine));
+                    }else{
+                        Cursor cursor = getContentResolver().query(BusStationTable.CONTENT_URI, new String[] {
+                                BusStationTable._ID,
+                                BusStationTable.NAME,
+                        }, BusStationTable.NAME+" Like "+"'"+msg.obj+"%'", null, null);
+                        mBusLineList.setAdapter(new BusLineListAdapter(cursor,BusLineSearch.this,mIsSearchBusLine));
+                    }
+                    mBusLineList.invalidate();
             }
         }
 
@@ -100,9 +122,8 @@ public class BusLineSearch extends Activity implements OnItemSelectedListener, O
         ((RadioButton) findViewById(R.id.search_busstation)).setOnCheckedChangeListener(this);
         SharedPreferences info = getSharedPreferences("Info", 0);
         cityCode = info.getString("CityCode", "0755");
-        ExpandableListView busLineList = (ExpandableListView)findViewById(R.id.busLineList);
-        Cursor cursor = getContentResolver().query(BusLineTable.CONTENT_URI, null, null, null, null);
-        busLineList.setAdapter(new BusLineListAdapter(cursor,getBaseContext()));
+        mBusLineList = (ExpandableListView)findViewById(R.id.busLineList);
+        
     }
 
     @Override
@@ -155,7 +176,23 @@ public class BusLineSearch extends Activity implements OnItemSelectedListener, O
 
     @Override
     public void onClick(View v) {
-        Thread t = new Thread(new Runnable() {
+        if(v.getId()==R.id.search){
+            String search = searchName.getText().toString().trim();
+            //BusQuery.SearchType type = BusQuery.SearchType.BY_LINE_NAME;
+            if ("".equals(search)) {
+                mHandler.sendEmptyMessage(KEY_NULL);
+                return;
+            }
+            //buslineHandler.sendEmptyMessage(SEARCHING);
+//            if (!mIsSearchBusLine) {
+//
+//                type = BusQuery.SearchType.BY_STATION_NAME;
+//            }
+           mHandler.obtainMessage(UPDATE_ADAPTER, search).sendToTarget();
+            
+        }
+        
+        /*Thread t = new Thread(new Runnable() {
 
             @Override
             public void run() {
@@ -187,7 +224,7 @@ public class BusLineSearch extends Activity implements OnItemSelectedListener, O
             }
 
         });
-        t.start();
+        t.start();*/
     }
 
     private Handler buslineHandler = new Handler() {

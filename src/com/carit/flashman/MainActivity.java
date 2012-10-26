@@ -109,6 +109,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
         mMapController = mMapView.getController();
         mMapController.setZoom(12);
 
+        //http://maps.google.com/maps?q=32.615152,110.79561&iwoc=A&hl=zh-CN
         // add MyLocationOverlay
         mLocationOverlay = new MyLocationOverlayProxy(this, mMapView);
         mLocationOverlay.enableCompass();
