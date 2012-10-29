@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ import com.amap.mapapi.core.AMapException;
 import com.amap.mapapi.core.GeoPoint;
 import com.amap.mapapi.map.MapView;
 import com.carit.flashman.R;
+import com.carit.flashman.amap.BusLineListAdapter.BusLineData;
 import com.carit.flashman.provider.BusLineRelevanceTable;
 import com.carit.flashman.provider.BusLineTable;
 import com.carit.flashman.provider.BusStationTable;
@@ -102,6 +104,8 @@ public class BusLineSearch extends Activity implements OnItemSelectedListener, O
                     }else{
                         Cursor cursor = getContentResolver().query(BusStationTable.CONTENT_URI, new String[] {
                                 BusStationTable._ID,
+                                BusStationTable.LAT,
+                                BusStationTable.LNG,
                                 BusStationTable.NAME,
                         }, BusStationTable.NAME+" Like "+"'"+msg.obj+"%'", null, null);
                         mBusLineList.setAdapter(new BusLineListAdapter(cursor,BusLineSearch.this,mIsSearchBusLine));
@@ -178,18 +182,27 @@ public class BusLineSearch extends Activity implements OnItemSelectedListener, O
     public void onClick(View v) {
         if(v.getId()==R.id.search){
             String search = searchName.getText().toString().trim();
-            //BusQuery.SearchType type = BusQuery.SearchType.BY_LINE_NAME;
             if ("".equals(search)) {
                 mHandler.sendEmptyMessage(KEY_NULL);
                 return;
             }
-            //buslineHandler.sendEmptyMessage(SEARCHING);
-//            if (!mIsSearchBusLine) {
-//
-//                type = BusQuery.SearchType.BY_STATION_NAME;
-//            }
            mHandler.obtainMessage(UPDATE_ADAPTER, search).sendToTarget();
             
+        }
+        if(v.getId()==R.id.map_view_busline){
+            
+        }
+        if(v.getId()==R.id.map_view_busstation){
+            if(mIsSearchBusLine){
+                
+            }else{
+                Intent intent = new Intent();
+                intent.putExtra("lat", ((BusLineData)v.getTag()).getLat());
+                intent.putExtra("lng", ((BusLineData)v.getTag()).getLng());
+                intent.putExtra("name", ((BusLineData)v.getTag()).getName());
+                setResult(1, intent);
+                finish();
+            }
         }
         
         /*Thread t = new Thread(new Runnable() {

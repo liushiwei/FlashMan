@@ -71,6 +71,8 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     private static final int FIRST_LOCATION = 0x02;
 
     private static final int SEND_SMS = 0x03;
+    
+    private static final int BUSLINE_SEARCH = 0x04;
 
     private Spinner mProvincespinner;
 
@@ -250,7 +252,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
         switch (v.getId()) {
             case R.id.ImageButton_RouteAlert:
                 Intent intent = new Intent(this, BusLineSearch.class);
-                startActivity(intent);
+                startActivityForResult(intent,BUSLINE_SEARCH);
                 break;
             case R.id.ImageButtonMyloc:
                 mMapController.animateTo(mLocationOverlay.getMyLocation());
@@ -435,7 +437,9 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
                 // mContactText.setText(number);
                 // mContactText.setSelection(number.length());
                 break;
-
+            case BUSLINE_SEARCH:
+                mMapController.animateTo(new GeoPoint((int)(data.getDoubleExtra("lat", 0)*1E6), (int)(data.getDoubleExtra("lng", 0)*1E6)));
+                break;
             default:
                 break;
         }
