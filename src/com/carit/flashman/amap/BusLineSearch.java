@@ -107,7 +107,7 @@ public class BusLineSearch extends Activity implements OnItemSelectedListener, O
                                 BusStationTable.LAT,
                                 BusStationTable.LNG,
                                 BusStationTable.NAME,
-                        }, BusStationTable.NAME+" Like "+"'"+msg.obj+"%'", null, null);
+                        }, BusStationTable.NAME+" Like "+"'"+msg.obj+"%' )GROUP BY ("+BusStationTable.NAME, null, null);
                         mBusLineList.setAdapter(new BusLineListAdapter(cursor,BusLineSearch.this,mIsSearchBusLine));
                     }
                     mBusLineList.invalidate();
