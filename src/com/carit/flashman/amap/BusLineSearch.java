@@ -204,6 +204,9 @@ public class BusLineSearch extends Activity implements OnItemSelectedListener, O
                 finish();
             }
         }
+        if(v.getId()==R.id.view_busline){
+            
+        }
         
         /*Thread t = new Thread(new Runnable() {
 
