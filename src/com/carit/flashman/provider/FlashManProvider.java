@@ -113,6 +113,7 @@ public class FlashManProvider extends ContentProvider {
 //        db = mOpenHelper.getReadableDatabase();
 //        else
 //        db = mStaticDBHelper.getReadableDatabase();
+        Log.e(TAG, "selection  = "+selection);
         Cursor c = qb.query(db, projection, selection, selectionArgs, null, null, orderBy);
         // Tell the cursor what uri to watch, so it knows when its source data
         // changes

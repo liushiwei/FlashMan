@@ -88,23 +88,23 @@ public class MyLocationManager {
     private final LocationListener locationListener = new LocationListener() {
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.d(TAG, "onStatusChanged provider =" + provider + " status=" + status);
+            //Log.d(TAG, "onStatusChanged provider =" + provider + " status=" + status);
         }
 
         @Override
         public void onProviderEnabled(String provider) {
 
-            Log.d(TAG, "onProviderEnabled provider =" + provider);
+            //Log.d(TAG, "onProviderEnabled provider =" + provider);
         }
 
         @Override
         public void onProviderDisabled(String provider) {
-            Log.d(TAG, "onProviderDisabled provider =" + provider);
+            //Log.d(TAG, "onProviderDisabled provider =" + provider);
         }
 
         @Override
         public void onLocationChanged(Location location) {
-            Log.d(TAG, "onLocationChanged");
+            //Log.d(TAG, "onLocationChanged");
             if(LocationManager.GPS_PROVIDER.equals(location.getProvider())){
                 
                 mCallback.onCurrentLocation(location);

@@ -61,7 +61,7 @@ public class MyLocationOverlayProxy extends com.amap.mapapi.map.MyLocationOverla
 	public void onLocationChanged(Location location) {
 		// TODO Auto-generated method stub	
 	    if(location!=null){
-	    Toast.makeText(mContext,"Location provider = "+location.getProvider(), Toast.LENGTH_SHORT).show();
+	    //Toast.makeText(mContext,"Location provider = "+location.getProvider(), Toast.LENGTH_SHORT).show();
         if (LocationManager.GPS_PROVIDER.equals(location.getProvider())) {
             double [] latlng =Common.adjustLatLng(location.getLatitude(), location.getLongitude());
             location.setLatitude(latlng[0]);
@@ -80,7 +80,7 @@ public class MyLocationOverlayProxy extends com.amap.mapapi.map.MyLocationOverla
 
     @Override
     public boolean onTap(GeoPoint arg0, MapView arg1) {
-        Log.e("MyLocation", "onTap x="+arg0.getLatitudeE6()+ " y = "+arg0.getLongitudeE6());
+        //Log.e("MyLocation", "onTap x="+arg0.getLatitudeE6()+ " y = "+arg0.getLongitudeE6());
         if(getMyLocation()!=null){
         int size = 30;
         Point out=new Point();
@@ -88,7 +88,7 @@ public class MyLocationOverlayProxy extends com.amap.mapapi.map.MyLocationOverla
         Rect rect = new Rect(out.x-size,out.y-size,out.x+size,out.y+size);
         mMapView.getProjection().toPixels(arg0, out);
         if(rect.contains(out.x, out.y)){
-            Log.e("MyLocation", "click my location ");
+            //Log.e("MyLocation", "click my location ");
             mPopView.setVisibility(View.GONE);
             MapView.LayoutParams params = (MapView.LayoutParams) mPopView.getLayoutParams();
             params.x = 0;// Y轴偏移

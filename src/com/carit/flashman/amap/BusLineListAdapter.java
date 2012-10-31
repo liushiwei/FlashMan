@@ -45,8 +45,16 @@ public class BusLineListAdapter extends CursorTreeAdapter {
                     }, BusLineRelevanceTable.BUSLINEID + "=" + lineId, null, null);
         } else
             return null;
-        }else
-            return null;
+        }else{
+            int index = groupCursor.getColumnIndex(BusStationTable.NAME);
+            String stationName = groupCursor.getString(index);
+            return ((BusLineSearch) mContext).managedQuery(BusLineRelevanceTable.CONTENT_URI,
+                    new String[] {
+                    BusLineRelevanceTable._ID,
+                            BusLineRelevanceTable.BUSLINEID,
+                            BusLineRelevanceTable.BUSLINENAME,
+                    }, BusLineRelevanceTable.BUSSTATIONNAME + " like " + "'"+stationName+"'", null, null);            
+        }
 
     }
 
@@ -88,21 +96,34 @@ public class BusLineListAdapter extends CursorTreeAdapter {
     @Override
     protected View newChildView(Context context, Cursor cursor, boolean isLastChild,
             ViewGroup parent) {
-        View view = mInflater.inflate(
+        View view =null;
+        if(mIsSearchBusLine){
+        view = mInflater.inflate(
                 R.layout.busstation_list_item, parent, false);
         view.findViewById(R.id.map_view_busstation).setOnClickListener((BusLineSearch)mContext);
         view.findViewById(R.id.view_busline).setVisibility(View.GONE);
+        }else{
+            view = mInflater.inflate(
+                    R.layout.busline_list_item, parent, false);
+            view.findViewById(R.id.map_view_busline).setOnClickListener((BusLineSearch)mContext);
+        }
         return view;
     }
 
     @Override
     protected void bindChildView(View view, Context context, Cursor cursor, boolean isLastChild) {
-        
+        if(mIsSearchBusLine){
         ((TextView) view.findViewById(android.R.id.text1)).setText(cursor.getString(cursor.getColumnIndex(BusLineRelevanceTable.BUSSTATIONNAME)));
         BusLineData data = new BusLineData();
         data.setId(cursor.getString(cursor.getColumnIndex(BusLineRelevanceTable.BUSSTATIONID)));
         data.setName(cursor.getString(cursor.getColumnIndex(BusLineRelevanceTable.BUSSTATIONNAME)));
-        view.findViewById(R.id.map_view_busstation).setTag(data);  
+        view.findViewById(R.id.map_view_busstation).setTag(data);
+        }else{
+            ((TextView) view.findViewById(android.R.id.text1)).setText(cursor.getString(cursor.getColumnIndex(BusLineRelevanceTable.BUSLINENAME)));
+            BusLineData data = new BusLineData();
+            data.setId(cursor.getString(cursor.getColumnIndex(BusLineRelevanceTable.BUSLINEID)));
+            view.findViewById(R.id.map_view_busline).setTag(data);
+        }
 
     }
     

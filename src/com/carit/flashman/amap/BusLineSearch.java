@@ -84,6 +84,8 @@ public class BusLineSearch extends Activity implements OnItemSelectedListener, O
     public static final int UPDATE_ADAPTER = 6005;
     
     private ExpandableListView mBusLineList;
+    
+    private Cursor mCursor;
 
     private Handler mHandler = new Handler() {
 
@@ -94,21 +96,24 @@ public class BusLineSearch extends Activity implements OnItemSelectedListener, O
                     Toast.makeText(getBaseContext(), "输入不能为空", Toast.LENGTH_LONG).show();
                     break;
                 case UPDATE_ADAPTER:
+                    if(mCursor!=null&&!mCursor.isClosed())
+                        mCursor.isClosed();
                     if(mIsSearchBusLine){
-                    Cursor cursor = getContentResolver().query(BusLineTable.CONTENT_URI, new String[] {
+                        
+                        mCursor = getContentResolver().query(BusLineTable.CONTENT_URI, new String[] {
                             BusLineTable._ID,
                             BusLineTable.LINEID,
                             BusLineTable.NAME
                     }, BusLineTable.NAME+" Like "+"'"+msg.obj+"%'", null, null);
-                    mBusLineList.setAdapter(new BusLineListAdapter(cursor,BusLineSearch.this,mIsSearchBusLine));
+                    mBusLineList.setAdapter(new BusLineListAdapter(mCursor,BusLineSearch.this,mIsSearchBusLine));
                     }else{
-                        Cursor cursor = getContentResolver().query(BusStationTable.CONTENT_URI, new String[] {
+                        mCursor = getContentResolver().query(BusStationTable.CONTENT_URI, new String[] {
                                 BusStationTable._ID,
                                 BusStationTable.LAT,
                                 BusStationTable.LNG,
                                 BusStationTable.NAME,
                         }, BusStationTable.NAME+" Like "+"'"+msg.obj+"%' )GROUP BY ("+BusStationTable.NAME, null, null);
-                        mBusLineList.setAdapter(new BusLineListAdapter(cursor,BusLineSearch.this,mIsSearchBusLine));
+                        mBusLineList.setAdapter(new BusLineListAdapter(mCursor,BusLineSearch.this,mIsSearchBusLine));
                     }
                     mBusLineList.invalidate();
             }
