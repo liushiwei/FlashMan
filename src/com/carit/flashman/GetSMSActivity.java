@@ -43,13 +43,11 @@ public class GetSMSActivity extends Activity implements OnClickListener {
                 null);   // Sort order.   
    
         if( cursor == null ||!cursor.moveToFirst()) {   
-            Log.d("GetSMSActivity", "getPeople null");  
             String text = String.format(getString(R.string.sms_from), number);
             CharSequence styledText = Html.fromHtml(text);
             ((TextView)findViewById(R.id.sms_label)).setText(styledText); 
             return;   
         }   
-        Log.d("GetSMSActivity", "getPeople cursor.getCount() = " + cursor.getCount());   
         for( int i = 0; i < cursor.getCount(); i++ )   
         {   
             cursor.moveToPosition(i);   

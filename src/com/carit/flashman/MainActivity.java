@@ -425,7 +425,6 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
 
                 String number = cursor.getString(cursor.getColumnIndexOrThrow(Phones.NUMBER));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow(Phones.NAME));
-                Log.d(TAG, "number = " + number + " name = " + name);
                 Message msg = new Message();
                 Bundle bundle = new Bundle();
                 bundle.putString("number", number);
@@ -446,7 +445,6 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     }
 
     public static void sendSms(String destPhone, String message) {
-        Log.d(TAG, "Phone:" + destPhone + "Message:" + message);
         SmsManager smsManager = SmsManager.getDefault();
         if (message.length() > 70) {
             ArrayList<String> msgs = smsManager.divideMessage(message);
