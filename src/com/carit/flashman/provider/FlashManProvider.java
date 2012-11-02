@@ -286,9 +286,9 @@ public class FlashManProvider extends ContentProvider {
         public void onCreate(SQLiteDatabase db) {
             Log.e(TAG, "Database Create!");
             db.execSQL(LocationTable.CREATE_SQL);
-            db.execSQL(BusLineTable.CREATE_SQL);
-            db.execSQL(BusStationTable.CREATE_SQL);
-            db.execSQL(BusLineRelevanceTable.CREATE_SQL);
+            //db.execSQL(BusLineTable.CREATE_SQL);
+            //db.execSQL(BusStationTable.CREATE_SQL);
+            //db.execSQL(BusLineRelevanceTable.CREATE_SQL);
             db.execSQL(PoiTable.CREATE_SQL);
             db.execSQL(FavoritePointTable.CREATE_SQL);
             db.execSQL(CityTable.CREATE_SQL);

@@ -64,6 +64,7 @@ public class BusLineListAdapter extends CursorTreeAdapter {
         View view =  mInflater.inflate(
                 R.layout.busline_list_item, parent, false);
         view.findViewById(R.id.map_view_busline).setOnClickListener((BusLineSearch)mContext);
+        view.findViewById(R.id.view_busline).setOnClickListener((BusLineSearch)mContext);
         return view;
         }else{
             View view =  mInflater.inflate(
@@ -106,6 +107,7 @@ public class BusLineListAdapter extends CursorTreeAdapter {
             view = mInflater.inflate(
                     R.layout.busline_list_item, parent, false);
             view.findViewById(R.id.map_view_busline).setOnClickListener((BusLineSearch)mContext);
+            view.findViewById(R.id.view_busline).setOnClickListener((BusLineSearch)mContext);
         }
         return view;
     }

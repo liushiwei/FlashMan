@@ -42,4 +42,12 @@
 	<string name="fav_describe">描述</string>
 	<string name="fav_point">收藏当前位置</string>
 	<string name="fav_point_delete">删除</string>
+	<string name="start_time">首发时间:</string>
+	<string name="end_time">末班时间:</string>
+	<string name="front_name">始发站:</string>
+	<string name="terminal_name">终点站:</string>
+	<string name="length">全程%1$d公里</string>
+	<string name="basic_price">起步价:%1$d元</string>
+	<string name="total_price">全程价:%1$d元</string>
+	<string name="loading_data">正在加载数据&#8230;</string>
 </resources>

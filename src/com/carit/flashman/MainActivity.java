@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -19,11 +20,13 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.provider.Contacts.People.Phones;
+import android.support.v4.widget.CursorAdapter;
 import android.telephony.gsm.SmsManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -43,6 +46,7 @@ import com.carit.flashman.amap.FavoritePointsActivity;
 import com.carit.flashman.amap.LongPressOverlay;
 import com.carit.flashman.amap.MyLocationOverlayProxy;
 import com.carit.flashman.amap.SMSLocationOverlay;
+import com.carit.flashman.provider.BusStationTable;
 import com.carit.flashman.provider.CityTable;
 import com.carit.flashman.util.Common;
 
@@ -73,6 +77,8 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     private static final int SEND_SMS = 0x03;
     
     private static final int BUSLINE_SEARCH = 0x04;
+    
+    private static final int ON_CREATE = 0x05;
 
     private Spinner mProvincespinner;
 
@@ -103,6 +109,11 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getInitCity();
+
+    }
+    
+    private void delayOnCreate(){
         setContentView(R.layout.main_layout);
         // init mapView
         mMapView = (MapView) findViewById(R.id.vmapView);
@@ -111,7 +122,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
         mMapController = mMapView.getController();
         mMapController.setZoom(12);
 
-        //http://maps.google.com/maps?q=32.615152,110.79561&iwoc=A&hl=zh-CN
+        //https://maps.google.com/?source=friendlink&q=31.975214,118.752961(11/3%E4%B8%8A%E5%8D%88+10:24+%E6%88%91%E7%9A%84%E4%BD%8D%E7%BD%AE)
         // add MyLocationOverlay
         mLocationOverlay = new MyLocationOverlayProxy(this, mMapView);
         mLocationOverlay.enableCompass();
@@ -124,7 +135,20 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
                 mMapController.animateTo(mLocationOverlay.getMyLocation());
             }
         });
+        SharedPreferences info = getSharedPreferences("Info", 0);
+        String cityCode = info.getString("CityCode", "");
+        Cursor result = getBaseContext().getContentResolver().query(CityTable.CONTENT_URI,
+                new String[] {
+                        "lat", "lng"
+                }, "code like \"%" + cityCode + "%\"", null, null);
+        if (result.moveToFirst()) {
+            GeoPoint center = new GeoPoint(result.getDouble(result.getColumnIndex("lat")),
+                    result.getDouble(result.getColumnIndex("lng")), true);
 
+            // result.getDouble(result.getColumnIndex("lat"));
+            mMapController.setCenter(center);
+        }
+        
         // register OnClickListener
         findViewById(R.id.ImageButton_RouteAlert).setOnClickListener(this);
         findViewById(R.id.ImageButtonMyloc).setOnClickListener(this);
@@ -142,7 +166,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
         i.setClass(this, FlashManService.class);
         startService(i);
         bindService(i, mServiceConnection, BIND_AUTO_CREATE);
-        getInitCity();
+        
 
         // add LongPressOverlay
         mPassPinDrawable = getResources().getDrawable(R.drawable.pin_purple);
@@ -154,12 +178,14 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     @Override
     protected void onPause() {
         // disableMyLocation();
+        if(this.mLocationOverlay!=null)
         this.mLocationOverlay.disableMyLocation();
         super.onPause();
     }
 
     @Override
     protected void onResume() {
+        if(this.mLocationOverlay!=null)
         this.mLocationOverlay.enableMyLocation();
 
         super.onResume();
@@ -205,6 +231,9 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
                                         }
                                     });
                     builder.show();
+                    break;
+                case ON_CREATE:
+                    delayOnCreate();
                     break;
             }
             // Toast.makeText(getBaseContext(), msg.obj.toString(),
@@ -327,21 +356,13 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
         if (cityCode.equals("")) {
             setInitCity();
         } else {
-            Cursor result = getBaseContext().getContentResolver().query(CityTable.CONTENT_URI,
-                    new String[] {
-                            "lat", "lng"
-                    }, "code like \"%" + cityCode + "%\"", null, null);
-            if (result.moveToFirst()) {
-                GeoPoint center = new GeoPoint(result.getDouble(result.getColumnIndex("lat")),
-                        result.getDouble(result.getColumnIndex("lng")), true);
-
-                // result.getDouble(result.getColumnIndex("lat"));
-                mMapController.setCenter(center);
-            }
+            handler.sendEmptyMessage(ON_CREATE);
+            
         }
 
     }
 
+    @SuppressWarnings("deprecation")
     private void setInitCity() {
         View view = View.inflate(MainActivity.this, R.layout.city_choice, null);
         mProvincespinner = (Spinner) view.findViewById(R.id.province);
@@ -437,6 +458,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
                 // mContactText.setSelection(number.length());
                 break;
             case BUSLINE_SEARCH:
+                if(data!=null)
                 mMapController.animateTo(new GeoPoint((int)(data.getDoubleExtra("lat", 0)*1E6), (int)(data.getDoubleExtra("lng", 0)*1E6)));
                 break;
             default:
