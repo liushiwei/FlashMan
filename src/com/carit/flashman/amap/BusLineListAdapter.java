@@ -82,7 +82,9 @@ public class BusLineListAdapter extends CursorTreeAdapter {
         ((TextView) view.findViewById(android.R.id.text1)).setText(cursor.getString(cursor.getColumnIndex(BusLineTable.NAME)));
         BusLineData data = new BusLineData();
         data.setId(cursor.getString(cursor.getColumnIndex(BusLineTable.LINEID)));
+        data.setName(cursor.getString(cursor.getColumnIndex(BusLineTable.NAME)));
         view.findViewById(R.id.map_view_busline).setTag(data);
+        view.findViewById(R.id.view_busline).setTag(data);
         }else{
             ((TextView) view.findViewById(android.R.id.text1)).setText(cursor.getString(cursor.getColumnIndex(BusStationTable.NAME)));
             BusLineData data = new BusLineData();
@@ -124,7 +126,9 @@ public class BusLineListAdapter extends CursorTreeAdapter {
             ((TextView) view.findViewById(android.R.id.text1)).setText(cursor.getString(cursor.getColumnIndex(BusLineRelevanceTable.BUSLINENAME)));
             BusLineData data = new BusLineData();
             data.setId(cursor.getString(cursor.getColumnIndex(BusLineRelevanceTable.BUSLINEID)));
+            data.setName(cursor.getString(cursor.getColumnIndex(BusLineRelevanceTable.BUSLINENAME)));
             view.findViewById(R.id.map_view_busline).setTag(data);
+            view.findViewById(R.id.view_busline).setTag(data);
         }
 
     }

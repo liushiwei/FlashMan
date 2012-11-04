@@ -20,14 +20,13 @@
             android:layout_alignParentLeft="true"/>
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/bus_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="7dp"
-            android:text="Large Text"
-            android:textAppearance="?android:attr/textAppearanceLarge" 
+            android:textAppearance="?android:attr/textAppearanceSmall" 
             />
         
     </RelativeLayout>
@@ -36,6 +35,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/BusLine_View_Style"
+                android:text="@string/bus_front_name"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:id="@+id/bus_front_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/BusLine_View_Style"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/BusLine_View_Style"
+                android:text="@string/bus_terminal_name"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:id="@+id/bus_terminal_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/BusLine_View_Style"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,10 +80,59 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/BusLine_View_Style"
-                android:text="@string/start_time"
+                android:text="@string/bus_start_time"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
             <TextView
-                android:id="@+id/start_time"
+                android:id="@+id/bus_start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/BusLine_View_Style"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/BusLine_View_Style"
+                android:text="@string/bus_end_time"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:id="@+id/bus_end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/BusLine_View_Style"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/bus_basic_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/BusLine_View_Style"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:id="@+id/bus_total_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/BusLine_View_Style"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+           
+            <TextView
+                android:id="@+id/bus_length"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/BusLine_View_Style"
@@ -57,5 +141,10 @@
         </LinearLayout>
 
     </LinearLayout>
+    <ListView android:id="@+id/bus_stations" 
+        android:layout_width="match_parent"
+                android:layout_height="match_parent">
+        
+    </ListView>
 
 </LinearLayout>

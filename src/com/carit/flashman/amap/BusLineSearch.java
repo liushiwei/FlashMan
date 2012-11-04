@@ -210,7 +210,11 @@ public class BusLineSearch extends Activity implements OnItemSelectedListener, O
             }
         }
         if(v.getId()==R.id.view_busline){
+            
             Intent intent =new Intent(this,BusLineDetailActivity.class);
+            BusLineData data = (BusLineData) v.getTag();
+            intent.putExtra("bus_line_id", data.getId());
+            intent.putExtra("bus_name", data.getName());
             startActivity(intent);
         }
         
