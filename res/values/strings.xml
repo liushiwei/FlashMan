@@ -47,7 +47,7 @@
 	<string name="bus_front_name">始发站:</string>
 	<string name="bus_terminal_name">终点站:</string>
 	<string name="bus_length">全程%1$f公里</string>
-	<string name="bus_basic_price">起步价:%1$f元</string>
-	<string name="bus_total_price">全程价:%1$f元</string>
+	<string name="bus_basic_price">起步价:%1$.2f元</string>
+	<string name="bus_total_price">全程价:%1$.2f元</string>
 	<string name="loading_data">正在加载数据&#8230;</string>
 </resources>
