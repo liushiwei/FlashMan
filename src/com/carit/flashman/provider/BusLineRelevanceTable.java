@@ -15,6 +15,8 @@ public class BusLineRelevanceTable implements BaseColumns{
     public static final String BUSSTATIONORDER = "BusStationOrder";
     public static final String BUSSTATIONNAME = "BusStationName";
     public static final String BUSLINENAME = "BusLineName";
+    public static final String BUSSTATIONLAT = "BusStationLat";
+    public static final String BUSSTATIONLNG = "BusStationLng";
     public static final String CREATE_SQL = "CREATE TABLE BusLineRelevance ("
             +_ID+" INTEGER primary key,"
             +"[BusLineId] TEXT NOT NULL, "
@@ -42,5 +44,7 @@ public static HashMap<String, String> tableProjectionMap;
         tableProjectionMap.put(BUSSTATIONORDER,BUSSTATIONORDER);
         tableProjectionMap.put(BUSSTATIONNAME,BUSSTATIONNAME);
         tableProjectionMap.put(BUSLINENAME,BUSLINENAME);
+        tableProjectionMap.put(BUSSTATIONLAT,BUSSTATIONLAT);
+        tableProjectionMap.put(BUSSTATIONLNG,BUSSTATIONLNG);
     }
 }

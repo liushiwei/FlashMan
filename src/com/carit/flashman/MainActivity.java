@@ -45,7 +45,9 @@ import com.carit.flashman.amap.BusLineSearch;
 import com.carit.flashman.amap.FavoritePointsActivity;
 import com.carit.flashman.amap.LongPressOverlay;
 import com.carit.flashman.amap.MyLocationOverlayProxy;
+import com.carit.flashman.amap.PathOverlay;
 import com.carit.flashman.amap.SMSLocationOverlay;
+import com.carit.flashman.provider.BusLineRelevanceTable;
 import com.carit.flashman.provider.BusLineTable;
 import com.carit.flashman.provider.BusStationTable;
 import com.carit.flashman.provider.CityTable;
@@ -82,6 +84,8 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     private static final int ON_CREATE = 0x05;
 
     private static final int SHOW_BUSLINE = 0x06;
+    
+    private static final int GET_BUSLINE_DATA_COMPLETED = 0x07;
 
     private Spinner mProvincespinner;
 
@@ -111,6 +115,12 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     private Drawable mPassPinDrawable;
 
     private SMSLocationOverlay mSMSLocationOverlay;
+    
+    private PathOverlay mPathOverlay;
+    
+    private Cursor mBusLineCursor;
+    
+    private Cursor mBusStationsCursor;
 
     /** Called when the activity is first created. */
     @Override
@@ -254,6 +264,20 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
                     
                        
                    }.start();
+                    break;
+                case GET_BUSLINE_DATA_COMPLETED:
+                    ArrayList<GeoPoint> paths = new ArrayList<GeoPoint>();
+                    String coordinates = mBusLineCursor.getString(mBusLineCursor.getColumnIndex(BusLineTable.COORDINATES));
+                    String points[] = coordinates.split("|");
+                    for(String point :points){
+                        String lat_lng[] = point.split(",");
+                        GeoPoint geoPoint =new GeoPoint((int)(Double.valueOf(lat_lng[0])*1E6),(int)(Double.valueOf(lat_lng[1])*1E6));
+                        paths.add(geoPoint);
+                    }
+                    if(mPathOverlay==null){
+                        mPathOverlay  = new PathOverlay(paths, mMapView, mCityspinner, mMapController, mPassPinDrawable);
+                    mMapView.getOverlays().add(mPathOverlay);
+                    }
                     break;
             }
             // Toast.makeText(getBaseContext(), msg.obj.toString(),
@@ -542,16 +566,17 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     }
     
     private void getBusLineData() {
-        Cursor busline = getContentResolver().query(
+        mBusLineCursor = getContentResolver().query(
                 BusLineTable.CONTENT_URI,
                 new String[] {
                         BusLineTable._ID, BusLineTable.KEYNAME, BusLineTable.COORDINATES
                 }, BusLineTable.LINEID + " = " + mBusLineId, null, null);
-        Cursor busStations = getContentResolver().query(
-                BusLineTable.CONTENT_URI,
+        mBusStationsCursor = getContentResolver().query(
+                BusLineRelevanceTable.CONTENT_URI,
                 new String[] {
-                        BusLineTable._ID, BusLineTable.KEYNAME, BusLineTable.COORDINATES
-                }, BusLineTable.LINEID + " = " + mBusLineId, null, null);
+                        BusLineRelevanceTable.BUSSTATIONNAME, BusLineRelevanceTable.BUSSTATIONLAT,BusLineRelevanceTable.BUSSTATIONLNG
+                }, BusLineRelevanceTable.BUSLINEID + " = " + mBusLineId, null, null);
+        handler.sendEmptyMessage(GET_BUSLINE_DATA_COMPLETED);
     }
 
 }
