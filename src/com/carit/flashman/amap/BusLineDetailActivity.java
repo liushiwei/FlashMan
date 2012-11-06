@@ -2,8 +2,8 @@
 package com.carit.flashman.amap;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.carit.flashman.MainActivity;
 import com.carit.flashman.R;
 import com.carit.flashman.provider.BusLineRelevanceTable;
 import com.carit.flashman.provider.BusLineTable;
@@ -66,15 +67,21 @@ public class BusLineDetailActivity extends Activity implements OnClickListener {
                                 @Override
                                 public View newView(Context context, Cursor cursor, ViewGroup parent) {
                                     View view = super.newView(context, cursor, parent);
-                                    view.findViewById(R.id.view_busline).setOnClickListener(BusLineDetailActivity.this);
-                                    view.findViewById(R.id.map_view_busline).setOnClickListener(BusLineDetailActivity.this);
+                                    //view.findViewById(R.id.view_busline).setVisibility(View.GONE);
+                                    view.findViewById(R.id.map_view_busstation).setOnClickListener(BusLineDetailActivity.this);
+                                    view.findViewById(R.id.map_view_busstation).setTag(new AdapterData());
+                                    
                                     return view;
                                 }
 
                                 @Override
                                 public void bindView(View view, Context context, Cursor cursor) {
-                                    
+                                    AdapterData data =  (AdapterData) view.findViewById(R.id.map_view_busstation).getTag();
+                                    data.setBusLineId(cursor.getLong(cursor.getColumnIndex(BusLineRelevanceTable.BUSLINEID)));
+                                    data.setBusStationId(cursor.getLong(cursor.getColumnIndex(BusLineRelevanceTable.BUSSTATIONID)));
+                                    data.setBusStationName(cursor.getString(cursor.getColumnIndex(BusLineRelevanceTable.BUSSTATIONNAME)));
                                     super.bindView(view, context, cursor);
+                                    
                                 }
                                 
                                 
@@ -114,7 +121,7 @@ public class BusLineDetailActivity extends Activity implements OnClickListener {
             Cursor busStation = getContentResolver().query(
                     BusLineRelevanceTable.CONTENT_URI,
                     new String[] {
-                            BusLineRelevanceTable._ID, BusLineRelevanceTable.BUSSTATIONID,
+                            BusLineRelevanceTable._ID, BusLineRelevanceTable.BUSSTATIONID,BusLineRelevanceTable.BUSLINEID,
                             BusLineRelevanceTable.BUSSTATIONNAME,
                     }, BusLineRelevanceTable.BUSLINEID + "=" + bus_line_id, null, null);
             mHandler.obtainMessage(1, busStation).sendToTarget();
@@ -129,6 +136,15 @@ public class BusLineDetailActivity extends Activity implements OnClickListener {
             case R.id.btn_back:
                 finish();
                 break;
+            case R.id.map_view_busstation:
+                AdapterData data = (AdapterData) v.getTag();
+                Intent intent = new Intent(this,MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY|Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("busLineId", data.getBusLineId());
+                intent.putExtra("busStationId", data.getBusStationId());
+                intent.putExtra("busStationName", data.getBusStationName());
+                startActivity(intent);
+                break;
         }
 
     }
@@ -139,5 +155,30 @@ public class BusLineDetailActivity extends Activity implements OnClickListener {
     // return Double.valueOf(twoDForm.format(d));
     // }
     //
+    
+    class AdapterData {
+        private long busLineId;
+        private long busStationId;
+        private String busStationName;
+        public long getBusLineId() {
+            return busLineId;
+        }
+        public void setBusLineId(long busLineId) {
+            this.busLineId = busLineId;
+        }
+        public long getBusStationId() {
+            return busStationId;
+        }
+        public void setBusStationId(long busStationId) {
+            this.busStationId = busStationId;
+        }
+        public String getBusStationName() {
+            return busStationName;
+        }
+        public void setBusStationName(String busStationName) {
+            this.busStationName = busStationName;
+        }
+        
+    }
 
 }

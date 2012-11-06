@@ -46,6 +46,7 @@ import com.carit.flashman.amap.FavoritePointsActivity;
 import com.carit.flashman.amap.LongPressOverlay;
 import com.carit.flashman.amap.MyLocationOverlayProxy;
 import com.carit.flashman.amap.SMSLocationOverlay;
+import com.carit.flashman.provider.BusLineTable;
 import com.carit.flashman.provider.BusStationTable;
 import com.carit.flashman.provider.CityTable;
 import com.carit.flashman.util.Common;
@@ -67,7 +68,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     private ProgressBar mGetting_location;
 
     private FlashManService mMyService;
-    
+
     public static final int INTENT_SMS = 0x01;
 
     private static final int LOCATION_CHANGE = 0x01;
@@ -75,10 +76,12 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     private static final int FIRST_LOCATION = 0x02;
 
     private static final int SEND_SMS = 0x03;
-    
+
     private static final int BUSLINE_SEARCH = 0x04;
-    
+
     private static final int ON_CREATE = 0x05;
+
+    private static final int SHOW_BUSLINE = 0x06;
 
     private Spinner mProvincespinner;
 
@@ -87,8 +90,12 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     // private String mProvince;
 
     private String mCity;
-    
+
     private String mToNumber;
+
+    private long mBusLineId;
+
+    private long mBusStationId;
 
     private int[] mArrayIds = {
             R.array.AnHuiSheng, R.array.FuJianSheng, R.array.GanSuSheng, R.array.GangAo,
@@ -102,7 +109,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     };
 
     private Drawable mPassPinDrawable;
-    
+
     private SMSLocationOverlay mSMSLocationOverlay;
 
     /** Called when the activity is first created. */
@@ -112,8 +119,8 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
         getInitCity();
 
     }
-    
-    private void delayOnCreate(){
+
+    private void delayOnCreate() {
         setContentView(R.layout.main_layout);
         // init mapView
         mMapView = (MapView) findViewById(R.id.vmapView);
@@ -122,7 +129,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
         mMapController = mMapView.getController();
         mMapController.setZoom(12);
 
-        //https://maps.google.com/?source=friendlink&q=31.975214,118.752961(11/3%E4%B8%8A%E5%8D%88+10:24+%E6%88%91%E7%9A%84%E4%BD%8D%E7%BD%AE)
+        // https://maps.google.com/?source=friendlink&q=31.975214,118.752961(11/3%E4%B8%8A%E5%8D%88+10:24+%E6%88%91%E7%9A%84%E4%BD%8D%E7%BD%AE)
         // add MyLocationOverlay
         mLocationOverlay = new MyLocationOverlayProxy(this, mMapView);
         mLocationOverlay.enableCompass();
@@ -130,7 +137,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
         // 实现初次定位使定位结果居中显示
         mLocationOverlay.runOnFirstFix(new Runnable() {
             public void run() {
-                
+
                 handler.sendMessage(Message.obtain(handler, FIRST_LOCATION));
                 mMapController.animateTo(mLocationOverlay.getMyLocation());
             }
@@ -148,7 +155,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
             // result.getDouble(result.getColumnIndex("lat"));
             mMapController.setCenter(center);
         }
-        
+
         // register OnClickListener
         findViewById(R.id.ImageButton_RouteAlert).setOnClickListener(this);
         findViewById(R.id.ImageButtonMyloc).setOnClickListener(this);
@@ -157,36 +164,34 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
 
         // show mGetting_location
         mGetting_location = (ProgressBar) findViewById(R.id.progress_loc);
-        Toast.makeText(getBaseContext(), R.string.getting_location,
-                 Toast.LENGTH_SHORT).show();
-           
+        Toast.makeText(getBaseContext(), R.string.getting_location, Toast.LENGTH_SHORT).show();
 
         // start FlashManService
         Intent i = new Intent();
         i.setClass(this, FlashManService.class);
         startService(i);
         bindService(i, mServiceConnection, BIND_AUTO_CREATE);
-        
 
         // add LongPressOverlay
         mPassPinDrawable = getResources().getDrawable(R.drawable.pin_purple);
         LongPressOverlay mLongPressOverlay = new LongPressOverlay(this, mMapView, mMapController,
                 mPassPinDrawable);
         mMapView.getOverlays().add(mLongPressOverlay);
+        processIntent(getIntent());
     }
 
     @Override
     protected void onPause() {
         // disableMyLocation();
-        if(this.mLocationOverlay!=null)
-        this.mLocationOverlay.disableMyLocation();
+        if (this.mLocationOverlay != null)
+            this.mLocationOverlay.disableMyLocation();
         super.onPause();
     }
 
     @Override
     protected void onResume() {
-        if(this.mLocationOverlay!=null)
-        this.mLocationOverlay.enableMyLocation();
+        if (this.mLocationOverlay != null)
+            this.mLocationOverlay.enableMyLocation();
 
         super.onResume();
         // mMyLocationManager.enableMyLocation();
@@ -215,13 +220,16 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
                     Bundle bundle = msg.getData();
                     String to = bundle.getString("name") != null ? bundle.getString("name")
                             : bundle.getString("number");
-                    
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
                             .setMessage(String.format(getString(R.string.sure_send_position), to))
                             .setPositiveButton(android.R.string.ok,
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
-                                            sendSms(mToNumber,"#navi#|"+mSMSPoint.getLatitudeE6()/1E6+","+mSMSPoint.getLongitudeE6()/1E6+"|");
+                                            sendSms(mToNumber,
+                                                    "#navi#|" + mSMSPoint.getLatitudeE6() / 1E6
+                                                            + "," + mSMSPoint.getLongitudeE6()
+                                                            / 1E6 + "|");
                                         }
                                     })
                             .setNegativeButton(android.R.string.cancel,
@@ -234,6 +242,18 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
                     break;
                 case ON_CREATE:
                     delayOnCreate();
+                    break;
+                case SHOW_BUSLINE:
+                   new  Thread (){
+
+                    @Override
+                    public void run() {
+                        getBusLineData();
+                    }
+
+                    
+                       
+                   }.start();
                     break;
             }
             // Toast.makeText(getBaseContext(), msg.obj.toString(),
@@ -281,7 +301,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
         switch (v.getId()) {
             case R.id.ImageButton_RouteAlert:
                 Intent intent = new Intent(this, BusLineSearch.class);
-                startActivityForResult(intent,BUSLINE_SEARCH);
+                startActivityForResult(intent, BUSLINE_SEARCH);
                 break;
             case R.id.ImageButtonMyloc:
                 mMapController.animateTo(mLocationOverlay.getMyLocation());
@@ -357,7 +377,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
             setInitCity();
         } else {
             handler.sendEmptyMessage(ON_CREATE);
-            
+
         }
 
     }
@@ -458,8 +478,10 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
                 // mContactText.setSelection(number.length());
                 break;
             case BUSLINE_SEARCH:
-                if(data!=null)
-                mMapController.animateTo(new GeoPoint((int)(data.getDoubleExtra("lat", 0)*1E6), (int)(data.getDoubleExtra("lng", 0)*1E6)));
+                if (data != null)
+                    mMapController.animateTo(new GeoPoint(
+                            (int) (data.getDoubleExtra("lat", 0) * 1E6), (int) (data
+                                    .getDoubleExtra("lng", 0) * 1E6)));
                 break;
             default:
                 break;
@@ -477,15 +499,14 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
             smsManager.sendTextMessage(destPhone, null, message, null, null);
         }
     }
-    
-    public void addSMSItem(GeoPoint point , String title){
-        if(mSMSLocationOverlay==null){
-            mSMSLocationOverlay = new SMSLocationOverlay(mMapView, mMapController,
-                    mPassPinDrawable);
+
+    public void addSMSItem(GeoPoint point, String title) {
+        if (mSMSLocationOverlay == null) {
+            mSMSLocationOverlay = new SMSLocationOverlay(mMapView, mMapController, mPassPinDrawable);
             mSMSLocationOverlay.addSMSItem(point, title);
             mMapView.getOverlays().add(mSMSLocationOverlay);
-            
-        }else{
+
+        } else {
             mSMSLocationOverlay.addSMSItem(point, title);
         }
     }
@@ -502,14 +523,35 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     public void onConfigurationChanged(Configuration arg0) {
         Log.e(TAG, "onConfigurationChanged");
         super.onConfigurationChanged(arg0);
-        if (arg0.orientation==Configuration.ORIENTATION_LANDSCAPE) {
+        if (arg0.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             // Nothing need to be done here
-             
-         } else {
+
+        } else {
             // Nothing need to be done here
-         }
+        }
+    }
+
+    private void processIntent(Intent intent) {
+
+        mBusLineId = intent.getLongExtra("busLineId", 0);
+        if (mBusLineId > 0) {
+            mBusStationId = intent.getLongExtra("busStationId", 0);
+            String busStationName = intent.getStringExtra("busStationName");
+            handler.obtainMessage(SHOW_BUSLINE, busStationName).sendToTarget();
+        }
     }
     
-   
+    private void getBusLineData() {
+        Cursor busline = getContentResolver().query(
+                BusLineTable.CONTENT_URI,
+                new String[] {
+                        BusLineTable._ID, BusLineTable.KEYNAME, BusLineTable.COORDINATES
+                }, BusLineTable.LINEID + " = " + mBusLineId, null, null);
+        Cursor busStations = getContentResolver().query(
+                BusLineTable.CONTENT_URI,
+                new String[] {
+                        BusLineTable._ID, BusLineTable.KEYNAME, BusLineTable.COORDINATES
+                }, BusLineTable.LINEID + " = " + mBusLineId, null, null);
+    }
 
 }
