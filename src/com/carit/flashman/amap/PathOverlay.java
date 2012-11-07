@@ -21,6 +21,7 @@ import com.amap.mapapi.map.ItemizedOverlay.OnFocusChangeListener;
 import com.amap.mapapi.map.MapController;
 import com.amap.mapapi.map.MapView;
 import com.amap.mapapi.map.Projection;
+import com.carit.flashman.FlashManApplication;
 import com.carit.flashman.R;
 
 @SuppressWarnings("rawtypes")
@@ -59,7 +60,7 @@ public class PathOverlay extends ItemizedOverlay implements OnFocusChangeListene
     public PathOverlay(Drawable defaultMarker) {
         super(boundCenterBottom(defaultMarker));
     }
-    public PathOverlay(List<GeoPoint> points,MapView mapView, View popView,MapController mapCtrl,Drawable pin) {
+    public PathOverlay(List<GeoPoint> points,MapView mapView, MapController mapCtrl,Drawable pin) {
         super(boundCenterBottom(pin));
         this.points = points;
         paint = new Paint();
@@ -72,9 +73,12 @@ public class PathOverlay extends ItemizedOverlay implements OnFocusChangeListene
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeWidth(4);
         mPin = pin;
-        mPopView = popView;
         mMapView = mapView;
         mMapCtrl = mapCtrl;
+        mPopView = View.inflate(FlashManApplication.getContext(), R.layout.long_press_popup, null);
+        mMapView.addView(mPopView, new MapView.LayoutParams(MapView.LayoutParams.WRAP_CONTENT,
+                MapView.LayoutParams.WRAP_CONTENT, null, MapView.LayoutParams.BOTTOM_CENTER));
+        mPopView.setVisibility(View.GONE);
         populate(); // Add this
     }
 
@@ -111,7 +115,7 @@ public class PathOverlay extends ItemizedOverlay implements OnFocusChangeListene
                 }
             }
         }*/
-        if(shadow){
+        //if(shadow){
             Projection proj = mapView.getProjection();
 
             /*Clear the old path at first*/
@@ -119,7 +123,7 @@ public class PathOverlay extends ItemizedOverlay implements OnFocusChangeListene
             /* The first tap */
             Point tempPoint = new Point();
             for(int i=0;i<points.size();i++){
-                proj.toPixels(points.get(i), tempPoint);
+                tempPoint = proj.toPixels(points.get(i), null);
                 if(i<1){
                     path.moveTo(tempPoint.x, tempPoint.y);
                 }
@@ -130,9 +134,9 @@ public class PathOverlay extends ItemizedOverlay implements OnFocusChangeListene
             /* If indeed is a polygon just close the perimeter */
             canvas.drawPath(path, paint);
             
-        }
+        //}
         super.draw(canvas, mapView, shadow);
-        
+        boundCenterBottom(mPin);
     }
 
     public List<GeoPoint> getPoints() {

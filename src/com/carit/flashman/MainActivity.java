@@ -14,6 +14,7 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.mapapi.core.GeoPoint;
+import com.amap.mapapi.core.OverlayItem;
 import com.amap.mapapi.map.MapActivity;
 import com.amap.mapapi.map.MapController;
 import com.amap.mapapi.map.MapView;
@@ -84,7 +86,7 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     private static final int ON_CREATE = 0x05;
 
     private static final int SHOW_BUSLINE = 0x06;
-    
+
     private static final int GET_BUSLINE_DATA_COMPLETED = 0x07;
 
     private Spinner mProvincespinner;
@@ -115,11 +117,11 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
     private Drawable mPassPinDrawable;
 
     private SMSLocationOverlay mSMSLocationOverlay;
-    
+
     private PathOverlay mPathOverlay;
-    
+
     private Cursor mBusLineCursor;
-    
+
     private Cursor mBusStationsCursor;
 
     /** Called when the activity is first created. */
@@ -254,30 +256,58 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
                     delayOnCreate();
                     break;
                 case SHOW_BUSLINE:
-                   new  Thread (){
+                    new Thread() {
 
-                    @Override
-                    public void run() {
-                        getBusLineData();
-                    }
+                        @Override
+                        public void run() {
+                            getBusLineData();
+                        }
 
-                    
-                       
-                   }.start();
+                    }.start();
                     break;
                 case GET_BUSLINE_DATA_COMPLETED:
                     ArrayList<GeoPoint> paths = new ArrayList<GeoPoint>();
-                    String coordinates = mBusLineCursor.getString(mBusLineCursor.getColumnIndex(BusLineTable.COORDINATES));
-                    String points[] = coordinates.split("|");
-                    for(String point :points){
+                    String coordinates = null;
+                    if(mBusLineCursor.moveToFirst())
+                    coordinates = mBusLineCursor.getString(mBusLineCursor
+                            .getColumnIndex(BusLineTable.COORDINATES));
+                    else
+                        return;
+                    String points[] = coordinates.split("\\|");
+                    for (String point : points) {
                         String lat_lng[] = point.split(",");
-                        GeoPoint geoPoint =new GeoPoint((int)(Double.valueOf(lat_lng[0])*1E6),(int)(Double.valueOf(lat_lng[1])*1E6));
+                        GeoPoint geoPoint = new GeoPoint((int) (Double.valueOf(lat_lng[1]) * 1E6),
+                                (int) (Double.valueOf(lat_lng[0]) * 1E6));
                         paths.add(geoPoint);
                     }
-                    if(mPathOverlay==null){
-                        mPathOverlay  = new PathOverlay(paths, mMapView, mCityspinner, mMapController, mPassPinDrawable);
-                    mMapView.getOverlays().add(mPathOverlay);
+                    if (mPathOverlay == null) {
+                        mPathOverlay = new PathOverlay(paths, mMapView,mMapController, mPassPinDrawable);
+                        
                     }
+                    mPathOverlay.setPoints(paths);
+                    mPathOverlay.getOverlays().clear();
+                    if (mBusStationsCursor.moveToFirst()) {
+                        
+                        int lat = mBusStationsCursor.getColumnIndex(BusLineRelevanceTable.BUSSTATIONLAT);
+                        int lng = mBusStationsCursor.getColumnIndex(BusLineRelevanceTable.BUSSTATIONLNG);
+                        int name = mBusStationsCursor.getColumnIndex(BusLineRelevanceTable.BUSSTATIONNAME);
+                        do {
+                            // Get the field values
+
+//                            Location location = new Location(LocationManager.NETWORK_PROVIDER);
+//                            location.setLatitude(Double.valueOf(mBusStationsCursor.getString(lat)));
+//                            location.setLongitude(Double.valueOf(mBusStationsCursor.getString(lng)));
+//                            mLocations.add(location);
+                            GeoPoint geoPoint = new GeoPoint((int) (Double.valueOf(mBusStationsCursor.getDouble(lat)) * 1E6),
+                                    (int) (Double.valueOf(mBusStationsCursor.getDouble(lng)) * 1E6));
+                            OverlayItem overlayItem = new OverlayItem(geoPoint,mBusStationsCursor.getString(name),"");
+                            mPathOverlay.addOverlay(overlayItem);
+                        } while (mBusStationsCursor.moveToNext());
+
+                    }
+                    if(!mMapView.getOverlays().contains(mPathOverlay))
+                    mMapView.getOverlays().add(mPathOverlay);
+                    mMapView.postInvalidate();
                     break;
             }
             // Toast.makeText(getBaseContext(), msg.obj.toString(),
@@ -564,17 +594,16 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
             handler.obtainMessage(SHOW_BUSLINE, busStationName).sendToTarget();
         }
     }
-    
+
     private void getBusLineData() {
-        mBusLineCursor = getContentResolver().query(
-                BusLineTable.CONTENT_URI,
-                new String[] {
-                        BusLineTable._ID, BusLineTable.KEYNAME, BusLineTable.COORDINATES
-                }, BusLineTable.LINEID + " = " + mBusLineId, null, null);
+        mBusLineCursor = getContentResolver().query(BusLineTable.CONTENT_URI, new String[] {
+                BusLineTable._ID, BusLineTable.KEYNAME, BusLineTable.COORDINATES
+        }, BusLineTable.LINEID + " = " + mBusLineId, null, null);
         mBusStationsCursor = getContentResolver().query(
                 BusLineRelevanceTable.CONTENT_URI,
                 new String[] {
-                        BusLineRelevanceTable.BUSSTATIONNAME, BusLineRelevanceTable.BUSSTATIONLAT,BusLineRelevanceTable.BUSSTATIONLNG
+                        BusLineRelevanceTable.BUSSTATIONNAME, BusLineRelevanceTable.BUSSTATIONLAT,
+                        BusLineRelevanceTable.BUSSTATIONLNG
                 }, BusLineRelevanceTable.BUSLINEID + " = " + mBusLineId, null, null);
         handler.sendEmptyMessage(GET_BUSLINE_DATA_COMPLETED);
     }
