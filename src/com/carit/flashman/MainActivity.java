@@ -186,6 +186,8 @@ public class MainActivity extends MapActivity implements OnClickListener, Servic
 
         // add LongPressOverlay
         mPassPinDrawable = getResources().getDrawable(R.drawable.pin_purple);
+        mPassPinDrawable.setBounds(0, 0, mPassPinDrawable.getIntrinsicWidth(), mPassPinDrawable
+                .getIntrinsicHeight()); 
         LongPressOverlay mLongPressOverlay = new LongPressOverlay(this, mMapView, mMapController,
                 mPassPinDrawable);
         mMapView.getOverlays().add(mLongPressOverlay);

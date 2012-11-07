@@ -25,7 +25,7 @@ import com.carit.flashman.FlashManApplication;
 import com.carit.flashman.R;
 
 @SuppressWarnings("rawtypes")
-public class PathOverlay extends ItemizedOverlay implements OnFocusChangeListener{
+public class PathOverlay extends ItemizedOverlay<OverlayItem> implements OnFocusChangeListener{
     private List<GeoPoint> points;
 
     //private Directions mDirections;
